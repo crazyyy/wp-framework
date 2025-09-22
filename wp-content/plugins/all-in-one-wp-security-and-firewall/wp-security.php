@@ -2,7 +2,7 @@
 // @codingStandardsIgnoreStart
 /*
 Plugin Name: All-In-One Security (AIOS)
-Version: 5.4.2
+Version: 5.4.3
 Plugin URI: https://wordpress.org/plugins/all-in-one-wp-security-and-firewall/
 Update URI: https://wordpress.org/plugins/all-in-one-wp-security-and-firewall/
 Author: TeamUpdraft, DavidAnderson

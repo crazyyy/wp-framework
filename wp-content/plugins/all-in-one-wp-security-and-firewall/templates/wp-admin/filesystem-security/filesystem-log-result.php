@@ -3,7 +3,8 @@ if ($last_50_entries) { ?>
 <table class="widefat file_permission_table">
 	<thead>
 	<tr>
-		<th><?php echo sprintf(__('Showing latest entries for file: %s', 'all-in-one-wp-security-and-firewall'), '<strong>'.$filepath.'</strong>'); ?></th>
+		<?php /* translators: %s: File path. */ ?>
+		<th><?php echo sprintf(esc_html__('Showing latest entries for file: %s', 'all-in-one-wp-security-and-firewall'), '<strong>' . esc_html($filepath) . '</strong>'); ?></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -15,5 +16,6 @@ if ($last_50_entries) { ?>
 	</tbody>
 </table>
 <?php } else {
-	echo '<div class="aio_red_box"><p>'.sprintf(__('The file %s could not be read', 'all-in-one-wp-security-and-firewall'), '<strong>'.$filepath.'</strong>') .'</p></div>';
+	/* translators: %s: File path. */
+	echo '<div class="aio_red_box"><p>'.sprintf(esc_html__('The file %s could not be read', 'all-in-one-wp-security-and-firewall'), '<strong>' . esc_html($filepath) . '</strong>') . '</p></div>';
 }

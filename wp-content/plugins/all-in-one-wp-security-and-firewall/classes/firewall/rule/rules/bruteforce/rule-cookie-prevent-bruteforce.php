@@ -61,22 +61,22 @@ class Rule_Cookie_Prevent_Bruteforce extends Rule {
 		$login_page_slug = $aiowps_firewall_config->get_value('aios_login_page_slug');
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. A nonce is not available at this point.
 		if (!isset($_GET[$brute_force_secret_word])) {
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing is not required, as we validate the raw input.
 			$brute_force_secret_cookie_val = isset($_COOKIE[$brute_force_secret_cookie_name]) ? $_COOKIE[$brute_force_secret_cookie_name] : '';
 			$pw_protected_exception = $aiowps_firewall_config->get_value('aios_brute_force_attack_prevention_pw_protected_exception');
 			$prevent_ajax_exception = $aiowps_firewall_config->get_value('aios_brute_force_attack_prevention_ajax_exception');
 
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
-			if (isset($_SERVER['REQUEST_URI']) && '' != $_SERVER['REQUEST_URI'] && !hash_equals($brute_force_secret_cookie_val, \AIOS_Helper::get_hash($brute_force_secret_word))) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing is not required, as we validate the raw input.
+			if (!empty($_SERVER['REQUEST_URI']) && !hash_equals($brute_force_secret_cookie_val, \AIOS_Helper::get_hash($brute_force_secret_word))) {
 
-				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing will interfere with 6g rules.
-				$request_uri = $_SERVER['REQUEST_URI'];
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PCP warning. Sanitizing is not required, as we validate the raw input.
+				$request_uri = (string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 				// admin section or login page or login custom slug called
 				$is_admin_or_login = (false != strpos($request_uri, 'wp-admin') || false != strpos($request_uri, 'wp-login') || ('' != $login_page_slug && false != strpos($request_uri, $login_page_slug))) ? 1 : 0;
 				
 				// admin side ajax called
-				$is_admin_ajax_request = ('1' == $prevent_ajax_exception && false != strpos($request_uri, 'wp-admin/admin-ajax.php')) ? intval($prevent_ajax_exception) : 0;
+				$is_admin_ajax_request = ('1' == $prevent_ajax_exception && isset($_SERVER['SCRIPT_NAME']) && ('admin-ajax.php' === basename($_SERVER['SCRIPT_NAME']))) ? 1 : 0;
 				
 				// password protected page called
 				$is_password_protected_access = ('1' == $pw_protected_exception && isset($_GET['action']) && 'postpass' == $_GET['action']) ? 1 : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. A nonce is not available at this point.

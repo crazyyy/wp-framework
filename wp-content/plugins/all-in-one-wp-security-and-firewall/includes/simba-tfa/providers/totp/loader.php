@@ -1031,8 +1031,4 @@ class Simba_TFA_Provider_totp {
 		return $code;
 	}
 	
-	public function setUserHMACTypes() {
-		trigger_error("Deprecated: setUserHMACTypes() does nothing: remove any calls to it");
-	}
-
 }

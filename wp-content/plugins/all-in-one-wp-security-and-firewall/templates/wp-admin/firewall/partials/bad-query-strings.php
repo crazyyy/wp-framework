@@ -1,6 +1,6 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
 <div class="postbox aio_hidden" data-template="bad-query-strings">
-		<h3 class="hndle"><label for="title"><?php _e('Bad query strings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+		<h3 class="hndle"><label for="title"><?php esc_html_e('Bad query strings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 			<div id="firewall-deny-bad-queries-badge">
 				<?php
@@ -11,16 +11,16 @@
 			</div>
 		<table class="form-table">
 			<tr valign="top">
-				<th scope="row"><?php _e('Deny bad query strings', 'all-in-one-wp-security-and-firewall'); ?>:</th>
+				<th scope="row"><?php esc_html_e('Deny bad query strings', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('This will help protect you against malicious queries via XSS.', 'all-in-one-wp-security-and-firewall'), 'aiowps_deny_bad_query_strings', $aiowps_firewall_config->get_value('aiowps_deny_bad_query_strings')); ?>
-						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(esc_html__('This will help protect you against malicious queries via XSS.', 'all-in-one-wp-security-and-firewall'), 'aiowps_deny_bad_query_strings', $aiowps_firewall_config->get_value('aiowps_deny_bad_query_strings')); ?>
+						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php esc_html_e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 							<p class="description">
 								<?php
-								_e('This feature will prevent malicious string attacks on your site using XSS.', 'all-in-one-wp-security-and-firewall');
-								echo '<br />'.__('NOTE: Some of these strings might be used for plugins or themes and hence this might break some functionality.', 'all-in-one-wp-security-and-firewall');
+								esc_html_e('This feature will prevent malicious string attacks on your site using XSS.', 'all-in-one-wp-security-and-firewall');
+								echo '<br />'.esc_html__('NOTE: Some of these strings might be used for plugins or themes and hence this might break some functionality.', 'all-in-one-wp-security-and-firewall');
 								?>
 							</p>
 						</div>

@@ -2,6 +2,9 @@
 
 if (!defined('ABSPATH')) die('Access denied.');
 
+/**
+ * Public ethods which should always run should be considered for being marked 'final' to prevent accidental coding of child methods with the same method names. Consider doing this for any hooked to WP actions.
+ */
 class Simba_Two_Factor_Authentication_1 {
 
 	/**
@@ -130,7 +133,7 @@ class Simba_Two_Factor_Authentication_1 {
 		add_action('admin_menu', array($this, 'admin_menu'), 9);
 
 		add_action('admin_init', array($this, 'register_two_factor_auth_settings'));
-		add_action('init', array($this, 'init'));
+		add_action('init', array($this, 'init_parent'));
 
 		if (!defined('TWO_FACTOR_DISABLE') || !TWO_FACTOR_DISABLE) {
 			
@@ -175,7 +178,7 @@ class Simba_Two_Factor_Authentication_1 {
 	 *
 	 * @param WP_User $user - the user that the profile is for
 	 */
-	public function show_user_profile($user) {
+	final public function show_user_profile($user) {
 		if ($user->ID !== get_current_user_id() || !$this->is_activated_for_user($user->ID)) return;
 		echo '<h2>'.__('Two Factor Authentication', 'all-in-one-wp-security-and-firewall').'</h2>';
 		$settings_url = admin_url('admin.php').'?page='.$this->get_user_settings_page_slug();
@@ -238,7 +241,7 @@ class Simba_Two_Factor_Authentication_1 {
 	/**
 	 * Runs upon the WP filter admin_menu
 	 */
-	public function admin_menu() {
+	final public function admin_menu() {
 		$this->get_controller('totp')->potentially_port_private_keys();
 	}
 	
@@ -605,7 +608,7 @@ class Simba_Two_Factor_Authentication_1 {
 			if (is_array($roles_db)) {
 				foreach ($roles_db as $role_info) {
 					if (empty($role_info->meta_key) || !preg_match('/^'.$table_prefix.'\d+_capabilities$/', $role_info->meta_key) || empty($role_info->meta_value) || !preg_match('/^a:/', $role_info->meta_value)) continue;
-					$site_roles = unserialize($role_info->meta_value);
+					$site_roles = $this->unserialize($role_info->meta_value);
 					if (!is_array($site_roles)) continue;
 					foreach ($site_roles as $role => $active) {
 						if ($active && !in_array($role, $roles)) $roles[] = $role;
@@ -806,7 +809,7 @@ class Simba_Two_Factor_Authentication_1 {
 	 *
 	 * @return Boolean
 	 */
-	public function get_php_errors($errno, $errstr, $errfile, $errline) {
+	final public function get_php_errors($errno, $errstr, $errfile, $errline) {
 		if (0 == error_reporting()) return true;
 		$logline = $this->php_error_to_logline($errno, $errstr, $errfile, $errline);
 		$this->logged[] = $logline;
@@ -844,9 +847,9 @@ class Simba_Two_Factor_Authentication_1 {
 	}
 
 	/**
-	 * Runs upon the WordPress 'init' action
+	 * Runs upon the WordPress 'init' action.
 	 */
-	public function init() {
+	final public function init_parent() {
 		if ((!is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) && is_user_logged_in() && file_exists($this->includes_dir().'/tfa_frontend.php')) {
 			$this->load_frontend();
 		} else {
@@ -887,7 +890,7 @@ class Simba_Two_Factor_Authentication_1 {
 	/**
 	 * "Shared" - i.e. could be called from either front-end or back-end
 	 */
-	public function shared_ajax() {
+	final public function shared_ajax() {
 
 		if (empty($_POST['subaction']) || empty($_POST['nonce']) || !is_user_logged_in() || !wp_verify_nonce($_POST['nonce'], 'tfa_shared_nonce')) die('Security check (3).');
 
@@ -1105,10 +1108,10 @@ class Simba_Two_Factor_Authentication_1 {
 	/**
 	 * Save incorrect TFA code attempts in database
 	 *
-	 * @param Array   $tfa_incorrect_code_attempts    - all user info with incorrent code attempts 
-	 * @param Boolean $udpate                         - update in option table
+	 * @param Array   $tfa_incorrect_code_attempts    - all user info with incorrect code attempts 
+	 * @param Boolean $update                         - update in option table
 	 *
-	 * @retrun Void
+	 * @return Void
 	 */
 	private function save_incorrect_tfa_code_attempts($tfa_incorrect_code_attempts, $update = false) {
 		if ($update) {
@@ -1121,9 +1124,9 @@ class Simba_Two_Factor_Authentication_1 {
 	/**
 	 * Remove old incorrect TFA code attempts
 	 *
-	 * @param Array $user_info    - user invalid attempts
+	 * @param Array $user_info - user invalid attempts
 	 *
-	 * @retrun Array
+	 * @return Array
 	 */
 	private function remove_incorrect_tfa_code_old_attempts($user_info) {
 		$splice_recs = 0;
@@ -1133,16 +1136,18 @@ class Simba_Two_Factor_Authentication_1 {
 				$splice_recs++;
 			}
 		}
-		if ($splice_recs > 0) array_splice($user_info['attempts'], 0, $splice_recs); // remove all older attempts.
+		if ($splice_recs > 0) {
+			array_splice($user_info['attempts'], 0, $splice_recs); // remove all older attempts.
+		}
 		return $user_info;
 	}
 	
 	/**
 	 * Log incorrect TFA code attempt and email user if attempt exceeded limit
 	 *
-	 * @param WP_User $user - user object for teh user logging in
+	 * @param WP_User $user - user object for the user logging in
 	 *
-	 * @retrun Void
+	 * @return Void
 	 */
 	private function log_incorrect_tfa_code_attempt($user) {
 		$tfa_incorrect_code_attempts = get_site_option('tfa_incorrect_code_attempts');
@@ -1152,7 +1157,11 @@ class Simba_Two_Factor_Authentication_1 {
 		if (count($tfa_incorrect_code_attempts) > 0) {
 			foreach ($tfa_incorrect_code_attempts as $i => $user_info) {
 				$user_info = $this->remove_incorrect_tfa_code_old_attempts($user_info); // remove old (before 30 mins) incorrect tfa code attempts by users
-				if ($user_info['username'] == $user->user_login) {
+				if (empty($user_info['attempts'])) {
+					unset($tfa_incorrect_code_attempts[$i]);
+					continue;
+				}
+				if ($user_info['user_id'] == $user->ID) {
 					$userinfo_added = true;
 					if (count($user_info['attempts']) >= TFA_INCORRECT_MAX_ATTEMPTS_ALLOWED_LIMIT && empty($user_info['mailsent'])) {
 						$this->notify_incorrect_tfa_code_attempts($user_info, $user->user_email); // if incorrect tfa attempts are more than max allowed notify user by email that some one else has your password.
@@ -1175,7 +1184,7 @@ class Simba_Two_Factor_Authentication_1 {
 	/**
 	 * Get incorrect attempt info time and IP address to save in database
 	 * 
-	 * @retrun Array
+	 * @return Array
 	 */
 	private function get_incorrect_tfa_attempt_info() {
 		$ip_address = apply_filters('tfa_user_ip_address', $_SERVER['REMOTE_ADDR']);
@@ -1187,16 +1196,16 @@ class Simba_Two_Factor_Authentication_1 {
 	 *
 	 * @param WP_User $user    - logging in user object
 	 *
-	 * @retrun Array
+	 * @return Array
 	 */
 	private function get_incorrect_tfa_user_info($user) {
-		return array('username' => $user->user_login, 'attempts' => array($this->get_incorrect_tfa_attempt_info()));
+		return array('user_id' => $user->ID, 'attempts' => array($this->get_incorrect_tfa_attempt_info()));
 	}
 	
 	/**
 	 * Notify user might be someone else has your possword  
 	 *
-	 * @param Array  $user_info	    - user's incorrect attempt informaion
+	 * @param Array  $user_info	    - user's incorrect attempt information
 	 * @param String $user_email    - user email address notification to be sent.
 	 */
 	private function notify_incorrect_tfa_code_attempts($user_info, $user_email) {
@@ -1390,7 +1399,7 @@ class Simba_Two_Factor_Authentication_1 {
 			$setting = $this->get_option('tfa_'.$prefix.$id);
 			$setting = ($setting === false) ? $default : ($setting ? 1 : 0);
 
-			echo '<input type="checkbox" id="tfa_'.$prefix.$id.'" name="tfa_'.$prefix.$id.'" class="tfa_'.$prefix.'user_roles" value="1" '.($setting ? 'checked="checked"' :'').'> <label for="tfa_'.$prefix.$id.'">'.htmlspecialchars($name)."</label><br>\n";
+			echo '<input type="checkbox" id="tfa_'.esc_attr($prefix.$id).'" name="tfa_'.esc_attr($prefix.$id).'" class="tfa_'.esc_attr($prefix).'user_roles" value="1" '.($setting ? 'checked="checked"' :'').'> <label for="tfa_'.esc_attr($prefix.$id).'">'.htmlspecialchars($name)."</label><br>\n";
 		}
 
 		global $wp_roles;
@@ -1400,7 +1409,7 @@ class Simba_Two_Factor_Authentication_1 {
 			$setting = $this->get_option('tfa_'.$prefix.$id);
 			$setting = ($setting === false) ? $default : ($setting ? 1 : 0);
 
-			echo '<input type="checkbox" id="tfa_'.$prefix.$id.'" name="tfa_'.$prefix.$id.'" class="tfa_'.$prefix.'user_roles" value="1" '.($setting ? 'checked="checked"' :'').'> <label for="tfa_'.$prefix.$id.'">'.htmlspecialchars(translate_user_role($name))."</label><br>\n";
+			echo '<input type="checkbox" id="tfa_'.esc_attr($prefix.$id).'" name="tfa_'.esc_attr($prefix.$id).'" class="tfa_'.esc_attr($prefix).'user_roles" value="1" '.($setting ? 'checked="checked"' :'').'> <label for="tfa_'.esc_attr($prefix.$id).'">'.htmlspecialchars(translate_user_role($name))."</label><br>\n";
 		}
 
 	}
@@ -1692,5 +1701,22 @@ class Simba_Two_Factor_Authentication_1 {
 	public function set_authentication_slug($authentication_slug) {
 		$this->authentication_slug = $authentication_slug;
 	}
-	
+
+	/**
+	 * Unserialize data while maintaining compatibility across PHP versions due to different number of arguments required by PHP's "unserialize" function
+	 *
+	 * @param string        $serialized_data Data to be unserialized, should be one that is already serialized
+	 * @param boolean|array $allowed_classes Either an array of class names which should be accepted, false to accept no classes, or true to accept all classes
+	 * @param integer       $max_depth       The maximum depth of structures permitted during unserialization, and is intended to prevent stack overflows
+	 *
+	 * @return mixed Unserialized data can be any of types (integer, float, boolean, string, array or object)
+	 */
+	private static function unserialize($serialized_data, $allowed_classes = false, $max_depth = 0) {
+		if (version_compare(PHP_VERSION, '7.0', '<')) {
+			$result = unserialize($serialized_data);
+		} else {
+			$result = unserialize($serialized_data, array('allowed_classes' => $allowed_classes, 'max_depth' => $max_depth)); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound -- This is the method used to unserialize data instead of the default unserialize method 
+		}
+		return $result;
+	}
 }

@@ -527,6 +527,14 @@ class AIOWPSecurity_Feature_Item_Manager {
 					'aiowps_enable_contact_form_7_captcha'
 				),
 				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'is_contact_form_7_plugin_active'),
+			),
+			'enforce-strong-password' => array(
+				'name' => __('Enforce use of strong passwords by users', 'all-in-one-wp-security-and-firewall'),
+				'points' => $this->feature_point_1,
+				'level' => $this->sec_level_basic,
+				'options' => array(
+					'aiowps_enforce_strong_password'
+				),
 			)
 		);
 

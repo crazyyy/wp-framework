@@ -76,8 +76,8 @@ class Ai1wm_Import_Controller {
 							// Run function hook
 							$params = call_user_func_array( $hook['function'], array( $params ) );
 
-						} catch ( Ai1wm_Import_Retry_Exception $e ) {
-							do_action( 'ai1wm_status_import_error', $params, $e );
+						} catch ( Ai1wm_Upload_Exception $e ) {
+							do_action( 'ai1wm_status_upload_error', $params, $e );
 
 							if ( defined( 'WP_CLI' ) ) {
 								/* translators: 1: Error code, 2: Error message. */
@@ -97,7 +97,6 @@ class Ai1wm_Import_Controller {
 
 							status_header( $e->getCode() );
 							ai1wm_json_response( array( 'errors' => array( array( 'code' => $e->getCode(), 'message' => $e->getMessage() ) ) ) );
-
 							exit;
 						} catch ( Exception $e ) {
 							do_action( 'ai1wm_status_import_error', $params, $e );
@@ -109,7 +108,6 @@ class Ai1wm_Import_Controller {
 
 							Ai1wm_Status::error( __( 'Import failed', 'all-in-one-wp-migration' ), $e->getMessage() );
 							Ai1wm_Notification::error( __( 'Import failed', 'all-in-one-wp-migration' ), $e->getMessage() );
-
 							exit;
 						}
 					}

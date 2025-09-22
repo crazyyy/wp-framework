@@ -67,10 +67,14 @@ class AIOWPSecurity_Debug {
 			'Operating system' => php_uname('s') . ' ' . php_uname('r'),
 			'Server' => $_SERVER['SERVER_SOFTWARE'],
 			'Memory usage' => AIOWPSecurity_Utility::convert_numeric_size_to_text(memory_get_peak_usage(true)),
-			'Total space' => AIOWPSecurity_Utility::convert_numeric_size_to_text(disk_total_space('/')),
-			'Used space' => AIOWPSecurity_Utility::convert_numeric_size_to_text(disk_total_space('/') - disk_free_space('/')),
 		);
 
+		if (function_exists('disk_total_space')) {
+			$server_info = array_merge($server_info, array(
+				'Total space' => AIOWPSecurity_Utility::convert_numeric_size_to_text(disk_total_space('/')),
+				'Used space' => AIOWPSecurity_Utility::convert_numeric_size_to_text(disk_total_space('/') - disk_free_space('/')),
+			));
+		}
 		return apply_filters('aiowp_security_get_server_info', $server_info);
 	}
 
@@ -403,24 +407,15 @@ class AIOWPSecurity_Debug {
 		global $aio_wp_security;
 		$ip_detection_methods = AIOS_Abstracted_Ids::get_ip_retrieve_methods();
 	
-		$active_method = $aio_wp_security->configs->get_value('aiowps_ip_retrieve_method');
+		$active_method = $aio_wp_security->configs->get_site_value('aiowps_ip_retrieve_method');  // In a multisite network, this setting is available for the main site only.
+		$active_method = empty($active_method) ? 0 : (int) $active_method;
 	
 		$ip_detection_list = array();
 	
 		foreach ($ip_detection_methods as $method => $variable) {
-			$status = '';
-			$ip_address = '';
-			if (strval($method) === $active_method) {
-				$status = 'On';
-			} else {
-				$status = 'Off';
-			}
-	
-			if (!empty($_SERVER[$variable])) {
-				$ip_address = $_SERVER[$variable];
-			}
-	
-			$ip_detection_list[$variable] = 'IP: ' . $ip_address . ' - status: ' . $status;
+			$status = ($method === $active_method) ? ' - ' . __('status', 'all-in-one-wp-security-and-firewall') . ': ' . __('On', 'all-in-one-wp-security-and-firewall') : '';
+			$ip_address = (!empty($_SERVER[$variable])) ? $_SERVER[$variable] : '';
+			$ip_detection_list[$variable] = __('IP', 'all-in-one-wp-security-and-firewall') . ': ' . $ip_address . $status;
 		}
 	
 		return $ip_detection_list;

@@ -218,8 +218,8 @@ class wfWAFStorageMySQL implements wfWAFStorageInterface {
 
 		$attackData = array(
 				'failedRules'     => $failedRulesString,
-				'paramKey'        => base64_encode($failedParamKey),
-				'paramValue'      => base64_encode($failedParamValue),
+				'paramKey'        => base64_encode((string) $failedParamKey),
+				'paramValue'      => base64_encode((string) $failedParamValue),
 				'path'            => base64_encode($request->getPath()),
 				'fullRequest'     => base64_encode($request),
 				'requestMetadata' => $request->getMetadata(),

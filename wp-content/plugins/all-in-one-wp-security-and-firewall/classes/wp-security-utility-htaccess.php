@@ -163,10 +163,11 @@ class AIOWPSecurity_Utility_Htaccess {
 
 		// figure out what server is being used
 		$serverType = AIOWPSecurity_Utility::get_server_type();
-		$error_msg = __('An error has occurred while writing to the .htaccess file.', 'all-in-one-wp-security');
 
 		if (in_array($serverType, array('-1', 'nginx', 'iis')) && !defined('WP_CLI')) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('The .htaccess file is not supported by your web server.', 'all-in-one-wp-security'), !$show_error);
+			if ($show_error) {
+				AIOWPSecurity_Admin_Menu::show_msg_error_st(__('The .htaccess file is not supported by your web server.', 'all-in-one-wp-security-and-firewall'), !$show_error);
+			}
 			$aio_wp_security->debug_logger->log_debug("Unable to write to .htaccess - server type not supported.", 4);
 			return false; // unable to write to the file
 		}
@@ -174,14 +175,14 @@ class AIOWPSecurity_Utility_Htaccess {
 		$home_path = AIOWPSecurity_Utility_File::get_home_path();
 		$htaccess = $home_path . '.htaccess';
 		if (!self::htaccess_exist_and_readable($htaccess)) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('The .htaccess file either does not exist or is unreadable', 'all-in-one-wp-security'), !$show_error);
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__('The .htaccess file either does not exist or is unreadable', 'all-in-one-wp-security-and-firewall'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("The .htaccess file either does not exist or is unreadable", 4);
 			return false;
 		} // check the existence of the file and if its readable
 
 		// confirm the hataccess has valid markers
 		if (!self::htaccess_has_valid_markers($htaccess)) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('The .htaccess file contains invalid content, please manually verify the file contents', 'all-in-one-wp-security'), !$show_error);
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__('The .htaccess file contains invalid content, please manually verify the file contents', 'all-in-one-wp-security-and-firewall'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("Unable to edit the .htaccess file as it contains invalid content, please manually verify the file contents", 4);
 			return false;
 		}
@@ -191,14 +192,14 @@ class AIOWPSecurity_Utility_Htaccess {
 		// creating a copy of htaccess file to work on
 		$temp_htaccess = $home_path.'.htaccess_temp';
 		if (!copy($htaccess, $temp_htaccess)) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('A copy of the file could not be created', 'all-in-one-wp-security'), !$show_error);
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__('A copy of the .htaccess file could not be created', 'all-in-one-wp-security-and-firewall'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("Write operation on .htaccess file failed, unable to create a copy of the file", 4);
 			return false;
 		}
 
 		// clean up old rules first
 		if (-1 == AIOWPSecurity_Utility_Htaccess::delete_from_htaccess($temp_htaccess)) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . __("Unable to delete plugin's content from .htaccess file.", 'all-in-one-wp-security'), !$show_error);
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__("Unable to delete plugin's content from .htaccess file.", 'all-in-one-wp-security-and-firewall'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("Unable to delete plugin's content from .htaccess file.", 4);
 			return false; //unable to write to the file
 		}
@@ -214,7 +215,7 @@ class AIOWPSecurity_Utility_Htaccess {
 
 		$f = @fopen($temp_htaccess, 'w+'); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore warning as we try to handle it below
 		if (!$f) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg, !$show_error);
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__('Write operation on .htaccess failed.', 'all-in-one-wp-security-and-firewall'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("Write operation on .htaccess failed.", 4);
 			return false; //we can't write to the file
 		}
@@ -237,14 +238,14 @@ class AIOWPSecurity_Utility_Htaccess {
 
 		// before writing into the live htaccess confirm the markers still valid
 		if (!self::htaccess_has_valid_markers($temp_htaccess)) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg .__('The .htaccess file has invalid content, please manually verify that the file is properly formatted', 'all-in-one-wp-security'), !$show_error);
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__('The .htaccess file has invalid content, please manually verify that the file is properly formatted', 'all-in-one-wp-security-and-firewall'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("The .htaccess file has invalid content, please manually verify that the file is properly formatted", 4);
 			return false;
 		}
 		
 		// copy the changes from the temp htaccess into the live htaccess from here
 		if (!copy($temp_htaccess, $htaccess)) {
-			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg, !$show_error);
+			AIOWPSecurity_Admin_Menu::show_msg_error_st(__('An error has occurred while writing to the .htaccess file.', 'all-in-one-wp-security-and-firewall'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("Failed to write to the .htaccess file", 4);
 			return false;
 		}

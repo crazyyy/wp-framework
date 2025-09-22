@@ -2,7 +2,7 @@
 Tags: contact form, anti-spam, spam protection, captcha, honeypot
 Requires at least: 4.8
 Tested up to: 6.8
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 Requires PHP: 5.6
 Contributors: wpexpertsio
 License: GPLv2 or later
@@ -122,6 +122,10 @@ CF7 Apps is a third-party plugin and is not officially associated with or endors
 5. CF7 Apps Tags.
 
 == Changelog ==
+
+= 3.0.1 - Sep 02, 2025 =
+* Code Optimization
+
 = 3.0.0 - July 16, 2025 =
 * NEW - Introducing CF7 Apps, All new Dashboard.
 * NEW - Introducing hCaptcha.

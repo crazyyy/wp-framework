@@ -23,6 +23,8 @@ class wfConfig {
 	const OPTIONS_TYPE_AUDIT_LOG = 'auditlog';
 	const OPTIONS_TYPE_DIAGNOSTICS = 'diagnostics';
 	const OPTIONS_TYPE_ALL = 'all';
+
+	const DEFAULT_ALERT_MAX_HOURLY = 5;
 	
 	private static $tableExists = true;
 	private static $cache = array();
@@ -145,7 +147,7 @@ class wfConfig {
 			'maxExecutionTime' => array('value' => 0, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)), 
 			'howGetIPs' => array('value' => '', 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)), 
 			'actUpdateInterval' => array('value' => 2, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)), 
-			'alert_maxHourly' => array('value' => 0, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)), 
+			'alert_maxHourly' => array('value' => self::DEFAULT_ALERT_MAX_HOURLY, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
 			'loginSec_userBlacklist' => array('value' => '', 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_STRING)),
 			'liveTraf_maxRows' => array('value' => 2000, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),
 			'liveTraf_maxAge' => array('value' => 30, 'autoload' => self::AUTOLOAD, 'validation' => array('type' => self::TYPE_INT)),

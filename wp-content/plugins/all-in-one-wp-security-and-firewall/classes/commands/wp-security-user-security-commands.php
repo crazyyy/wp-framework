@@ -7,29 +7,28 @@ if (trait_exists('AIOWPSecurity_User_Security_Commands_Trait')) return;
 trait AIOWPSecurity_User_Security_Commands_Trait {
 
 	/**
-	 * Performs the action to save the user enumeration prevention feature settings.
+	 * Saves user account security settings.
 	 *
-	 * @param array $data An array containing the data to be saved.
-	 *                    The array may contain the following key:
-	 *                    - 'aiowps_prevent_users_enumeration': A boolean indicating whether to enable user enumeration prevention.
-	 * @return array Returns an array containing the status of the operation ('success' or 'error'),
-	 *               a message indicating the result of the operation,
-	 *               and a badge representing the updated feature details.
+	 * This function updates security settings related to user enumeration prevention
+	 * and strong password enforcement in the AIO WP Security plugin.
+	 *
+	 * @param array $data An associative array containing the security settings:
+	 *                    - 'aiowps_prevent_users_enumeration' (optional): Set to '1' to prevent user enumeration.
+	 *                    - 'aiowps_enforce_strong_password' (optional): Set to '1' to enforce strong passwords.
+	 *
+	 * @return array The response array containing:
+	 *               - 'badges' (array): A list of applied security badges.
 	 */
-	public function perform_save_user_enumeration($data) {
+	public function perform_save_user_account_settings($data) {
 		global $aio_wp_security;
-
-		$response = array(
-			'status' => 'success'
-		);
 
 		// Save settings
 		$aio_wp_security->configs->set_value('aiowps_prevent_users_enumeration', isset($data["aiowps_prevent_users_enumeration"]) ? '1' : '', true);
+		$aio_wp_security->configs->set_value('aiowps_enforce_strong_password', isset($data['aiowps_enforce_strong_password']) ? '1' : '', true);
 
-		$response['message'] = __('The settings have been successfully updated.', 'all-in-one-wp-security-and-firewall');
-		$response['badges'] = $this->get_features_id_and_html(array('disable-users-enumeration'));
+		$badges = array('enforce-strong-password', 'disable-users-enumeration');
 
-		return $response;
+		return $this->handle_response(true, '', array('badges' => $badges));
 	}
 
 	/**

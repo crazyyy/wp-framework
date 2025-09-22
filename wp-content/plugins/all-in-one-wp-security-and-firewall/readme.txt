@@ -5,7 +5,7 @@ Tags: security, malware scanning, two factor authentication, firewall, login sec
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 5.4.2
+Stable tag: 5.4.3
 License: GPLv3 or later
 
 Protect your website investment with All-In-One Security (AIOS) – a comprehensive and easy to use security plugin designed especially for WordPress. Featuring login security tools, a cutting-edge firewall and much more.
@@ -244,6 +244,23 @@ Go to the settings menu after you activate the plugin and follow the instruction
 1. Features list.
 
 == Changelog ==
+
+= 5.4.3 - 8/Sep/2025 =
+
+* FEATURE: Added a feature to enforce the use of strong passwords by users
+* FIX: Bypass Cookie based brute force prevention using AJAX request.
+* FIX: PHP notice - the translation load text domain was called incorrectly.
+* FIX: Resolved call to undefined function disk_total_space in wp-security-debug.php when the hosting provider has disabled this PHP function.
+* FIX: Fatal error when accessing an array query parameter when the login page has been renamed.
+* FIX: Chrome console error where the maths captcha <label> referencing a missing input 'id', causing autofill and accessibility issues.
+* FIX: The AIOS translation .pot file does not include TFA labels.
+* FIX: When a user profile is updated, HIBP's 'Enforce on profile update' setting incorrectly triggers an error if the password has not been changed.
+* TWEAK: Added 'aios_blocked_request_redirect_url' filter to allow permanently blocked IPs to be redirected to a custom URL rather than 127.0.0.1.
+* TWEAK: Create new AIOS tables and update current AIOS tables to use the InnoDB engine.
+* TWEAK: Moved the '6G firewall rules' feature to the PHP rules tab
+* TWEAK: Moved the 'Internet bots' tab into the PHP rules tab
+* TWEAK: Resolved issue where IP detection status was always off for Debugging tab. 
+* TWEAK: The Manually approve registered users list should display the error message "You cannot block your own IP address".
 
 = 5.4.2 - 15/Jul/2025 =
 
@@ -1620,4 +1637,4 @@ those who want to enable the basic firewall but do not have "AllowOverride" opti
 - First commit to the WP repository.
 
 == Upgrade Notice ==
-* 5.4.2: Added the ability to enforce checking passwords against the HIBP API and upgrade all unsafe HTTP calls on the site. Various tweaks and fixes. A recommended update for all.
+* 5.4.3: Added the ability to enforce strong passwords along with a few bug fixes and UI changes.

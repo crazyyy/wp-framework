@@ -8,7 +8,7 @@ jQuery(function($) {
 	 * @return String
 	 */
 	function get_username_identifiers() {
-		// 'username' is used by WooCommerce
+		// 'username' is used by WooCommerce and RegistrationMagic
 		return '[name="log"], [name="username"], #user_login, #affwp-login-user-login, #affwp-user-login, #gform_fields_login input[type="text"], .um-field-username input[type="text"]';
 	}
 	
@@ -162,6 +162,9 @@ jQuery(function($) {
 		// This is used just for applying similar styling (via adding structure/CSS classes)
 		var form_is_ultimate_member = ($(form).find('.um-row').length > 0) ? true : false;
 
+		// This is used just for applying styling if .js-login-form class exists inside form
+		var form_is_login_form = ($(form).find('.js-login-form').length > 0) ? true : false;
+
 		// Gravity Forms won't submit if the elements are hidden
 		var form_retain_existing_elements = form_is_gravity_forms ? true : false;
 		
@@ -176,7 +179,8 @@ jQuery(function($) {
 			// Hide all elements in a browser-safe way
 			// .user-pass-wrap is the wrapper used (instead of a paragraph) on wp-login.php from WP 5.3
 			// .um-row : Ultimate Member
-			$submit_button.parents('form').first().find('p, .impu-form-line-fr, .tml-field-wrap, .user-pass-wrap, .elementor-field-type-text, .elementor-field-type-submit, .elementor-remember-me, .bbp-username, .bbp-password, .bbp-submit-wrapper, .gform_body, .um-row, .um-button').each(function(i) {
+            // .rmrow : RegistrationMagic
+			$submit_button.parents('form').first().find('p, .impu-form-line-fr, .tml-field-wrap, .user-pass-wrap, .elementor-field-type-text, .elementor-field-type-submit, .elementor-remember-me, .bbp-username, .bbp-password, .bbp-submit-wrapper, .gform_body, .um-row, .um-button, .js-login-form, .rmrow').each(function(i) {
 				$(this).css('visibility', 'hidden').css('position', 'absolute');
 				// On the WooCommerce form, the 'required' asterisk in the child <span> still shows without this
 				$(this).find('span').css('visibility', 'hidden').css('position', 'absolute');
@@ -210,14 +214,14 @@ jQuery(function($) {
 			
 			html += 'for="simba_two_factor_auth">';
 			
-			html += simba_tfasettings.otp + '<br><input type="text" name="two_factor_code" id="simba_two_factor_auth" autocomplete="off" data-lpignore="true"';
+			html += simba_tfasettings.otp + '</label><input type="text" name="two_factor_code" id="simba_two_factor_auth" autocomplete="off" data-lpignore="true"';
 			
 			if ($(form).hasClass('woocommerce-form-login')) {
 				// Retain compatibility with previous full-width layout
 				html += ' style="width: 100%;"';
 			}
 			
-			html += '></label>';
+			html += '>';
 			
 			if (form_is_ultimate_member) { html += '</div>'; }
 			
@@ -271,6 +275,8 @@ jQuery(function($) {
 			html += '"><input id="tfa_login_btn" class="button button-primary button-large';
 			
 			if (form_is_ultimate_member) { html += ' um-button'; }
+
+			if (form_is_login_form) { html += ' c-btn-rg hover:bg-main focus:bg-main'; }
 			
 			html += '" type="submit" ';
 			if ('undefined' !== typeof submit_button_name && '' != submit_button_name) { html += 'name="'+submit_button_name+'" '; }

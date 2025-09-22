@@ -3878,6 +3878,10 @@ class wfWebServerInfo {
 			$serverInfo->setSoftware(self::APACHE);
 			$serverInfo->setSoftwareName('apache');
 		}
+		else if (stripos($_SERVER['SERVER_SOFTWARE'], 'unit') !== false) {
+			$serverInfo->setSoftware(self::NGINX);
+			$serverInfo->setSoftwareName('unit');
+		}
 
 		$serverInfo->setHandler($sapi);
 
@@ -3894,7 +3898,7 @@ class wfWebServerInfo {
 	/**
 	 * @return bool
 	 */
-	public function isNGINX() {
+	public function isNginx() {
 		return $this->getSoftware() === self::NGINX;
 	}
 
@@ -3926,7 +3930,20 @@ class wfWebServerInfo {
 	public function isApacheSuPHP() {
 		return $this->isApache() && $this->isCGI() &&
 			function_exists('posix_getuid') &&
+			function_exists('getmyuid') &&
 			getmyuid() === posix_getuid();
+	}
+
+	private function isUnit() {
+		return $this->softwareName == "unit";
+	}
+
+	public function isNginxStandard() {
+		return $this->isNginx() && !$this->isUnit();
+	}
+
+	public function isNginxUnit() {
+		return $this->isNginx() && $this->isUnit();
 	}
 
 	/**

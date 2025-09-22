@@ -255,17 +255,24 @@ class AIOWPSecurity_List_Registered_Users extends AIOWPSecurity_List_Table {
 			}
 			$entries = array_map('esc_sql', $entries); // Escape every array element
 			//Let's go through each entry and block IP
+			$total_success = 0;
 			foreach ($entries as $id) {
 				$ip_address = get_user_meta($id, 'aiowps_registrant_ip', true);
 				$result = AIOWPSecurity_Blocking::add_ip_to_block_list($ip_address, 'registration_spam');
 				if (false === $result) {
+					if (AIOWPSecurity_Utility_IP::get_user_ip_address() == $ip_address) {
+						AIOWPSecurity_Admin_Menu::show_msg_error_st(__('You cannot block your own IP address:', 'all-in-one-wp-security-and-firewall') . ' ' . $ip_address);
+					}
 					$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_List_Registered_Users::block_selected_ips() - could not block IP : $ip_address", 4);
+				} else {
+					$total_success++;
 				}
 			}
-
-			$msg = __('The selected IP addresses were successfully added to the permanent block list.', 'all-in-one-wp-security-and-firewall');
-			$msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=permanent-block" target="_blank">'.__('View Blocked IPs', 'all-in-one-wp-security-and-firewall').'</a>';
-			AIOWPSecurity_Admin_Menu::show_msg_updated_st($msg);
+			if ($total_success > 0) {
+				$msg = __('The selected IP addresses were successfully added to the permanent block list.', 'all-in-one-wp-security-and-firewall');
+				$msg .= ' <a href="admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG.'&tab=permanent-block" target="_blank">'.__('View Blocked IPs', 'all-in-one-wp-security-and-firewall').'</a>';
+				AIOWPSecurity_Admin_Menu::show_msg_updated_st($msg);
+			}
 		}
 	}
 

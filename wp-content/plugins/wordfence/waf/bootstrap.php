@@ -791,20 +791,29 @@ class wfWAFWordPressI18n implements wfWAFI18nEngine {
 		return $text;
 	}
 
+	private function getPotentialDirectories() {
+		return array(
+			dirname(__FILE__) . "/../languages/",
+			dirname(WFWAF_LOG_PATH) . "/languages/plugins/"
+		);
+	}
+
 	protected function loadTranslations() {
 		require_once dirname(__FILE__) . '/pomo/mo.php';
 
 		$currentLocale = $this->storageEngine->getConfig('WPLANG', '', 'synced');
+		if (!preg_match("/^[a-zA-Z_]+$/", $currentLocale))
+			return false;
+		$filename = "wordfence-{$currentLocale}.mo";
 
-		// Find translation file for the current language.
-		$mofile = dirname(__FILE__) . '/../languages/wordfence-' . $currentLocale . '.mo';
-		if (!file_exists($mofile)) {
-			// No translation, use the default
-			$mofile = dirname(__FILE__) . '/../languages/wordfence.mo';
+		foreach ($this->getPotentialDirectories() as $directory) {
+			$path = "{$directory}/{$filename}";
+			if (file_exists($path)) {
+				$this->mo = new wfMO();
+				return $this->mo->import_from_file($path);
+			}
 		}
-
-		$this->mo = new wfMO();
-		return $this->mo->import_from_file( $mofile );
+		return false;
 	}
 }
 

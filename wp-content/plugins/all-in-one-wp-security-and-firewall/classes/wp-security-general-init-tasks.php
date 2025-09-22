@@ -333,6 +333,12 @@ class AIOWPSecurity_General_Init_Tasks {
 			$this->http_authentication();
 		}
 
+		// for enforcing strong passwords
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enforce_strong_password')) {
+			wp_register_script('remove-weak-pw', AIO_WP_SECURITY_URL.'/js/remove-weak-pw.js', array('jquery'), AIO_WP_SECURITY_VERSION, true);
+			wp_enqueue_script('remove-weak-pw');
+		}
+		
 		// For HIBP.
 		if ('1' == $aio_wp_security->configs->get_site_value('aiowps_hibp_user_profile_update')) {
 			add_action('user_profile_update_errors', 'AIOS_HIBP::user_profile_update_check', 1, 3);

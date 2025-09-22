@@ -25,8 +25,16 @@
 			'title' => __('String filtering', 'all-in-one-wp-security-and-firewall'),
 			'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 		),
+		'ng' => array(
+			'title' => __('nG firewall rules', 'all-in-one-wp-security-and-firewall'),
+			'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
+		),
 		'wp-rest-api' => array(
 			'title' => __('WP REST API', 'all-in-one-wp-security-and-firewall')
+		),
+		'internet-bots' => array(
+			'title' => __('Internet bot settings', 'all-in-one-wp-security-and-firewall'),
+			'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 		)
 	);
 
@@ -62,7 +70,7 @@
 		<div class="aiowps-settings">
 			<?php
 			foreach ($templates as $key => $template) {
-				$aio_wp_security->include_template('wp-admin/firewall/partials/' . esc_attr($key) . '.php');
+				$aio_wp_security->include_template('wp-admin/firewall/partials/' . esc_attr($key) . '.php', false, $settings);
 			}
 			?>
 		</div>

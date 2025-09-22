@@ -910,7 +910,7 @@ class wfWAFRuleComparison implements wfWAFRuleInterface {
 					
 					$commonStringsChecked = array();
 					foreach ($patterns as $index => $rule) {
-						if (@preg_match('/' . $rule . '/iS', null) === false) {
+						if (@preg_match('/' . $rule . '/iS', '') === false) {
 							continue; //This PCRE version can't compile the rule
 						}
 						

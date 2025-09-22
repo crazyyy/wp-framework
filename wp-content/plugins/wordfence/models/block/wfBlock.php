@@ -1603,7 +1603,7 @@ END AS `detailSort`
 		$log->getCurrentRequest()->actionDescription = __('blocked access via country blocking', 'wordfence');
 		wfConfig::inc('totalCountryBlocked');
 		wfActivityReport::logBlockedIP(wfUtils::getIP(), null, 'country');
-		$log->do503(3600, __('Access from your area has been temporarily limited for security reasons', 'wordfence')); //exits
+		$log->do503(3600, wfI18n::__('Access from your area has been temporarily limited for security reasons', 'wordfence')); //exits
 	}
 	
 	/**

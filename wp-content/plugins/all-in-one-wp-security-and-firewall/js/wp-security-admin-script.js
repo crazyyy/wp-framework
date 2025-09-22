@@ -484,8 +484,8 @@ jQuery(function($) {
 	
 	// Triggers the more info toggle link
 	jQuery(".aiowps_more_info_body").hide();//hide the more info on page load
-	function toggleMoreInfo() {
-		jQuery('.aiowps_more_info_anchor').on('click', function () {
+	function toggleMoreInfo(target = '.aiowps_more_info_anchor') {
+		jQuery(target).on('click', function () {
 			jQuery(this).next(".aiowps_more_info_body").animate({"height": "toggle"});
 			var toggle_char_ref = jQuery(this).find(".aiowps_more_info_toggle_char");
 			var toggle_char_value = toggle_char_ref.text();
@@ -1113,6 +1113,15 @@ jQuery(function($) {
 		aios_submit_form(jQuery(this), 'perform_php_firewall_settings', true, aios_trans.saving, null, function(response) {
 			if ("success" === response.status) {
 				jQuery('.aio_orange_box').remove();
+				if (jQuery('#aiowps_enable_6g_firewall').prop('checked')) {
+					jQuery('.aios-toggle-advanced-options').removeClass('advanced-options-disabled');
+					jQuery('.aios-advanced-options-panel .aiowps_more_info_body').hide();
+					toggleMoreInfo('.aios-advanced-options-panel .aiowps_more_info_anchor');
+				} else {
+					jQuery('.aios-toggle-advanced-options').addClass('advanced-options-disabled');
+					jQuery('.button.button-link.aios-toggle-advanced-options').removeClass('opened');
+				}
+				check_input();
 				jQuery('#post-body h2:first').after(response.extra_args.xmlprc_warning);
 			}
 		});
@@ -1128,30 +1137,14 @@ jQuery(function($) {
 		aios_submit_form(jQuery(this),'perform_save_blacklist_settings');
 	});
 
-	jQuery("#aios-internet-bots-settings-form").on('submit', function(e) {
-		e.preventDefault();
-		aios_submit_form(jQuery(this),'perform_internet_bot_settings');
-	});
-
 	jQuery("#aios-firewall-allowlist-form").on('submit', function(e) {
 		e.preventDefault();
 		aios_submit_form(jQuery(this),'perform_firewall_allowlist');
 	});
 
-	jQuery("#aios-6g-firewall-settings-form").on('submit', function(e) {
+	jQuery("#aios-5g-firewall-settings-form").on('submit', function(e) {
 		e.preventDefault();
-		aios_submit_form(jQuery(this), 'perform_xG_firewall_settings', true, aios_trans.saving, null, function(response) {
-			if ("success" === response.status) {
-				var aiowps_enable_6g_firewall = jQuery('#aiowps_enable_6g_firewall').prop('checked');
-				if (aiowps_enable_6g_firewall) {
-					jQuery('.aios-toggle-advanced-options').removeClass('advanced-options-disabled');
-					jQuery('.aiowps_more_info_body').hide();
-				} else {
-					jQuery('.aios-toggle-advanced-options').addClass('advanced-options-disabled');
-					jQuery('.button.button-link.aios-toggle-advanced-options').removeClass('opened');
-				}
-			}
-		})
+		aios_submit_form(jQuery(this), 'perform_save_5g_settings')
 	});
 
 	jQuery('#aiowps-firewall-status-container').on('submit', "#aiowpsec-firewall-setup-form", function(e) {
@@ -1185,9 +1178,9 @@ jQuery(function($) {
 	jQuery('#aiowps_fcds_change_detected').on('click', '.aiowps_view_last_fcd_results', view_scan_results_handler);
 
 	// start of user security menu ajax
-	jQuery('#aios-users-enumeration-form').on('submit', function(e) {
+	jQuery('#aios-user-accounts-settings-form').on('submit', function(e) {
 		e.preventDefault();
-		aios_submit_form(jQuery(this), 'perform_save_user_enumeration');
+		aios_submit_form(jQuery(this), 'perform_save_user_account_settings');
 	});
 
 	jQuery('#aios-change-admin-username-form').on('submit', function(e) {
@@ -1334,6 +1327,12 @@ jQuery(function($) {
 			jQuery.unblockUI();
 			submitButton.prop('disabled', false);
 		});
+	});
+
+	jQuery("#aios-enforce-strong-password-form").on('submit', function(e) {
+		e.preventDefault();
+
+		aios_submit_form(jQuery(this), 'enforce_strong_password');
 	});
 
 	// end of user security menu ajax
@@ -1630,30 +1629,32 @@ jQuery(function($) {
 	store_values();
 
 	// Add change event listener to all inputs
-	jQuery('.aiowps-settings :input').on('change', function() {
-		var all_inputs_back_to_original = true;
-		jQuery('.aiowps-settings :input').each(function() {
-			var input_name = jQuery(this).attr('name');
-			if (jQuery(this).is(':checkbox')) {
-				if (jQuery(this).is(':checked') !== initial_values[input_name]) {
-					all_inputs_back_to_original = false;
-					return false;
+	function check_input() {
+		jQuery('.aiowps-settings :input').on('change', function() {
+			var all_inputs_back_to_original = true;
+			jQuery('.aiowps-settings :input').each(function() {
+				var input_name = jQuery(this).attr('name');
+				if (jQuery(this).is(':checkbox')) {
+					if (jQuery(this).is(':checked') !== initial_values[input_name]) {
+						all_inputs_back_to_original = false;
+						return false;
+					}
+				} else {
+					if (jQuery(this).val() !== initial_values[input_name]) {
+						all_inputs_back_to_original = false;
+						return false;
+					}
 				}
+			});
+
+			if (all_inputs_back_to_original) {
+				jQuery('.aiowps-actions').hide();
 			} else {
-				if (jQuery(this).val() !== initial_values[input_name]) {
-					all_inputs_back_to_original = false;
-					return false;
-				}
+				jQuery('.aiowps-actions').show();
 			}
 		});
-
-		if (all_inputs_back_to_original) {
-			jQuery('.aiowps-actions').hide();
-		} else {
-			jQuery('.aiowps-actions').show();
-		}
-	});
-
+	}
+	check_input();
 	// Add click event listener to the button
 	jQuery('.aiowps-actions :input').on('click', function() {
 		// Hide the actions div

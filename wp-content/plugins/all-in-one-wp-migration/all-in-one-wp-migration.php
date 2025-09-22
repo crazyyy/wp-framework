@@ -5,7 +5,7 @@
  * Description: All-in-One WP Migration makes moving your entire WordPress site simple. Export or import your database, media, plugins, and themes with just a few clicks.
  * Author: ServMask
  * Author URI: https://servmask.com/
- * Version: 7.97
+ * Version: 7.99
  * Text Domain: all-in-one-wp-migration
  * Domain Path: /languages
  * Network: True

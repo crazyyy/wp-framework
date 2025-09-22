@@ -4,7 +4,7 @@ Tags: security, malware, 2fa, firewall, scanner
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to: 6.8
-Stable tag: 8.0.5
+Stable tag: 8.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -43,6 +43,7 @@ Rounded out by 2FA and a suite of additional features, Wordfence is the most com
 - **Real-time malware signature updates [Premium]** via the Threat Defense Feed (free version is delayed by 30 days).
 - **Compares with WordPress.org repository** your core files, themes and plugins, checking their integrity and reporting any changes to you.
 - **Repair WordPress core, theme, and plugin files** that have changed by overwriting them with a pristine, original version. Delete any files that don’t belong easily within the Wordfence interface.
+- **Malware Removal Tools: "Delete File" and "Delete All Deletable Files" options allow for efficient malware removal. Remember to investigate the scan results and backup files first!
 - **Checks your site for known security vulnerabilities** and alerts you to any issues. Also alerts you to potential security issues when a plugin has been closed or abandoned.
 - **Checks your content safety** by scanning file contents, posts and comments for dangerous URLs and suspicious content.
 - **Checks to see if your site or IP have been blocklisted [Premium]** for malicious activity, generating spam or other security issues.
@@ -205,6 +206,22 @@ Secure your website with Wordfence.
 9. Logging in is easy with Wordfence 2FA.
 
 == Changelog ==
+
+= 8.1.0 - August 25, 2025 =
+* Improvement: Added password scanning support for WordPress 6.8 and later
+* Improvement: Limited email alerts to 5 per hour by default and added notification when limit has been reached
+* Improvement: Improved URL scanning performance
+* Improvement: Updated GeoIP database
+* Change: Reduced scan result severity for vulnerabilities with high attack complexity or required privileges
+* Change: Added messaging around WAF support when NGINX Unit is detected
+* Change: Added notice and scan result about Wordfence Assistant
+* Change: Adjusted IPv6 connection issue message and appearance
+* Fix: Prevented deprecation notice about calling base64_encode with null parameter
+* Fix: Prevented deprecation message about calling preg_match with null parameter
+* Fix: Corrected license type shown on dashboard when expiring
+* Fix: Prevented disabled getmyuid function from causing fatal error
+* Fix: Prevented disabled get_current_user function from causing fatal error
+* Fix: Prevented notice about _load_textdomain_just_in_time being called incorrectly
 
 = 8.0.5 - April 8, 2025 =
 * Fix: Compatibility fixes for WordPress 6.8

@@ -179,9 +179,10 @@ class AIOWPSecurity_Captcha {
 				return $cust_html_code;
 				break;
 			case 'simple-math':
-				$cap_form = '<p class="aiowps-captcha"><label>'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
+				$maths_captcha_input_id = uniqid('aiowps-captcha-answer-'); // Generate a unique DOM-safe ID for the maths captcha input field to avoid duplicate IDs (when multiple forms appear on the same page).
+				$cap_form = '<p class="aiowps-captcha"><label for="' . esc_attr($maths_captcha_input_id) . '">'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
 				$cap_form .= '<div class="aiowps-captcha-equation"><strong>';
-				$maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question();
+				$maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question($maths_captcha_input_id);
 				$cap_form .= $maths_question_output . '</strong></div></p>';
 
 				$cust_html_code .= $cap_form;
@@ -219,9 +220,10 @@ class AIOWPSecurity_Captcha {
 				$this->add_captcha_script();
 				break;
 			case 'simple-math':
-				$captcha_form = '<p class="aiowps-captcha"><label>'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
+				$maths_captcha_input_id = uniqid('aiowps-captcha-answer-'); // Generate a unique DOM-safe ID for the maths captcha input field to avoid duplicate IDs (when multiple forms appear on the same page).
+				$captcha_form = '<p class="aiowps-captcha"><label for="' . esc_attr($maths_captcha_input_id) . '">'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
 				$captcha_form .= '<div class="aiowps-captcha-equation"><strong>';
-				$maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question();
+				$maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question($maths_captcha_input_id);
 				$captcha_form .= $maths_question_output . '</strong></div></p>';
 				$cust_html_code .= $captcha_form;
 				break;
@@ -361,9 +363,10 @@ class AIOWPSecurity_Captcha {
 				$this->get_captcha_form($default_captcha);
 				break;
 			case 'simple-math':
-				$cap_form = '<p class="aiowps-captcha hide-when-displaying-tfa-input"><label for="aiowps-captcha-answer">'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
+				$maths_captcha_input_id = uniqid('aiowps-captcha-answer-'); // Generate a unique DOM-safe ID for the maths captcha input field to avoid duplicate IDs (when multiple forms appear on the same page).
+				$cap_form = '<p class="aiowps-captcha hide-when-displaying-tfa-input"><label for="' . esc_attr($maths_captcha_input_id) . '">'.__('Please enter an answer in digits:', 'all-in-one-wp-security-and-firewall').'</label>';
 				$cap_form .= '<div class="aiowps-captcha-equation hide-when-displaying-tfa-input"><strong>';
-				$maths_question_output = $this->generate_maths_question();
+				$maths_question_output = $this->generate_maths_question($maths_captcha_input_id);
 				$cap_form .= $maths_question_output . '</strong></div></p>';
 				if ($return_instead_of_echo) return $cap_form;
 				echo $cap_form;
@@ -374,9 +377,11 @@ class AIOWPSecurity_Captcha {
 	/**
 	 * It generates a random math problem, stores the answer in the database, and returns the math problem
 	 *
+	 * @param string $maths_captcha_input_id A unique identifier used for the captcha input field's ID attribute to prevent duplicate IDs in the DOM (e.g., when multiple forms exist on a page).
+	 *
 	 * @return string - contains the HTML for the captcha.
 	 */
-	private function generate_maths_question() {
+	private function generate_maths_question($maths_captcha_input_id) {
 		global $aio_wp_security;
 		//For now we will only do plus, minus, multiplication
 		$equation_string = '';
@@ -443,7 +448,7 @@ class AIOWPSecurity_Captcha {
 		}
 		$equation_string .= '<input type="hidden" name="aiowps-captcha-string-info" class="aiowps-captcha-string-info" value="'.$random_str.'" />';
 		$equation_string .= '<input type="hidden" name="aiowps-captcha-temp-string" class="aiowps-captcha-temp-string" value="'.$current_time.'" />';
-		$equation_string .= '<input type="text" size="2" class="aiowps-captcha-answer" name="aiowps-captcha-answer" value="" autocomplete="off" />';
+		$equation_string .= '<input type="text" size="2" id="' . esc_attr($maths_captcha_input_id) . '" class="aiowps-captcha-answer" name="aiowps-captcha-answer" value="" autocomplete="off" />';
 		return $equation_string;
 	}
 

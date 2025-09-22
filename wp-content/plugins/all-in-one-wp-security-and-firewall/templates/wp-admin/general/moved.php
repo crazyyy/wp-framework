@@ -1,7 +1,16 @@
 <?php if (!defined('ABSPATH')) die('No direct access.'); ?>
 <?php
 
-$info = array();
+$info = array(
+	'6g' => array(
+		'title' => __('6G firewall rules', 'all-in-one-wp-security-and-firewall'),
+		'uri' => 'aiowpsec_firewall&tab=php-rules&subtab=ng'
+	),
+	'internet-bots' => array(
+		'title' => __('Internet bots', 'all-in-one-wp-security-and-firewall'),
+		'uri' => 'aiowpsec_firewall&tab=php-rules&subtab=internet-bots'
+	),
+);
 
 if (empty($info)) return;
 ?>

@@ -1461,6 +1461,23 @@ class AIOWPSecurity_Utility {
 	}
 
 	/**
+	 * Render the 5G Legacy Tab.
+	 *
+	 * This function checks if the current site is the main site and if the user is a super admin.
+	 * If these conditions are met, it checks whether the 5G firewall is enabled or not.
+	 *
+	 * @global object $aio_wp_security The global instance of the All-In-One WP Security & Firewall plugin.
+	 *
+	 * @return bool returns true if the 5G firewall is enabled, false otherwise.
+	 */
+	public static function render_5g_legacy_tab() {
+		global $aio_wp_security;
+		if (!AIOWPSecurity_Utility_Permissions::is_main_site_and_super_admin()) return false;
+
+		return '1' == $aio_wp_security->configs->get_value('aiowps_enable_5g_firewall');
+	}
+
+	/**
 	 * Filters an array item based on a specified callback key.
 	 *
 	 * This function checks if a specified callback is present and callable within the array item.

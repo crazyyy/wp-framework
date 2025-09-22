@@ -246,6 +246,10 @@ class wfLicense {
 		return $includePrefix ? __('Wordfence Free', 'wordfence') : __('Free', 'wordfence');
 	}
 
+	public function getBaseTypeLabel($requireCurrent = true) {
+		return $this->getTypeLabel($requireCurrent, false);
+	}
+
 	public function getPrefixedTypeLabel($requireCurrent = true) {
 		return $this->getTypeLabel($requireCurrent, true);
 	}

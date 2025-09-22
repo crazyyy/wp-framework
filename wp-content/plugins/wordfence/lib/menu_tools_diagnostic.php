@@ -116,6 +116,8 @@ if (!isset($sendingDiagnosticEmail)) {
 									<div class="wf-result-info"><?php echo (is_array($result['message']) && isset($result['message']['escaped']) ? $result['message']['escaped'] : nl2br(esc_html($result['message']))); ?></div>
 								<?php elseif ($result['test']): ?>
 									<div class="wf-result-success"><?php echo (is_array($result['message']) && isset($result['message']['escaped']) ? $result['message']['escaped'] : nl2br(esc_html($result['message']))); ?></div>
+								<?php elseif (isset($result['warn']) && $result['warn']): ?>
+									<div class="wf-result-warn"><?php echo (is_array($result['message']) && isset($result['message']['escaped']) ? $result['message']['escaped'] : nl2br(esc_html($result['message']))); ?></div>
 								<?php else: ?>
 									<div class="wf-result-error"><?php echo (is_array($result['message']) && isset($result['message']['escaped']) ? $result['message']['escaped'] : nl2br(esc_html($result['message']))); ?></div>
 								<?php endif ?>
@@ -159,6 +161,8 @@ if (!isset($sendingDiagnosticEmail)) {
 										<div class="wf-result-info"><?php echo (is_array($result['message']) && isset($result['message']['escaped']) ? $result['message']['escaped'] : nl2br(esc_html($result['message']))); ?></div>
 									<?php elseif ($result['test']): ?>
 										<div class="wf-result-success"><?php echo (is_array($result['message']) && isset($result['message']['escaped']) ? $result['message']['escaped'] : nl2br(esc_html($result['message']))); ?></div>
+									<?php elseif (isset($result['warn']) && $result['warn']): ?>
+										<div class="wf-result-warn"><?php echo (is_array($result['message']) && isset($result['message']['escaped']) ? $result['message']['escaped'] : nl2br(esc_html($result['message']))); ?></div>
 									<?php else: ?>
 										<div class="wf-result-error"><?php echo (is_array($result['message']) && isset($result['message']['escaped']) ? $result['message']['escaped'] : nl2br(esc_html($result['message']))); ?></div>
 									<?php endif ?>

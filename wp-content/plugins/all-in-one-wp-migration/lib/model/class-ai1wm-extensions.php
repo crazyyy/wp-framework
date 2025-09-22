@@ -42,7 +42,7 @@ class Ai1wm_Extensions {
 		// Add Microsoft Azure Extension
 		if ( defined( 'AI1WMZE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMZE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMZE_PLUGIN_KEY,
+				'key'      => AI1WMZE_PURCHASE_ID,
 				'title'    => AI1WMZE_PLUGIN_TITLE,
 				'about'    => AI1WMZE_PLUGIN_ABOUT,
 				'check'    => AI1WMZE_PLUGIN_CHECK,
@@ -56,7 +56,7 @@ class Ai1wm_Extensions {
 		// Add Backblaze B2 Extension
 		if ( defined( 'AI1WMAE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMAE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMAE_PLUGIN_KEY,
+				'key'      => AI1WMAE_PURCHASE_ID,
 				'title'    => AI1WMAE_PLUGIN_TITLE,
 				'about'    => AI1WMAE_PLUGIN_ABOUT,
 				'check'    => AI1WMAE_PLUGIN_CHECK,
@@ -70,7 +70,7 @@ class Ai1wm_Extensions {
 		// Add Backup Plugin
 		if ( defined( 'AI1WMVE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMVE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMVE_PLUGIN_KEY,
+				'key'      => AI1WMVE_PURCHASE_ID,
 				'title'    => AI1WMVE_PLUGIN_TITLE,
 				'about'    => AI1WMVE_PLUGIN_ABOUT,
 				'check'    => AI1WMVE_PLUGIN_CHECK,
@@ -84,7 +84,7 @@ class Ai1wm_Extensions {
 		// Add Box Extension
 		if ( defined( 'AI1WMBE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMBE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMBE_PLUGIN_KEY,
+				'key'      => AI1WMBE_PURCHASE_ID,
 				'title'    => AI1WMBE_PLUGIN_TITLE,
 				'about'    => AI1WMBE_PLUGIN_ABOUT,
 				'check'    => AI1WMBE_PLUGIN_CHECK,
@@ -98,7 +98,7 @@ class Ai1wm_Extensions {
 		// Add DigitalOcean Spaces Extension
 		if ( defined( 'AI1WMIE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMIE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMIE_PLUGIN_KEY,
+				'key'      => AI1WMIE_PURCHASE_ID,
 				'title'    => AI1WMIE_PLUGIN_TITLE,
 				'about'    => AI1WMIE_PLUGIN_ABOUT,
 				'check'    => AI1WMIE_PLUGIN_CHECK,
@@ -112,7 +112,7 @@ class Ai1wm_Extensions {
 		// Add Direct Extension
 		if ( defined( 'AI1WMXE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMXE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMXE_PLUGIN_KEY,
+				'key'      => AI1WMXE_PURCHASE_ID,
 				'title'    => AI1WMXE_PLUGIN_TITLE,
 				'about'    => AI1WMXE_PLUGIN_ABOUT,
 				'check'    => AI1WMXE_PLUGIN_CHECK,
@@ -126,7 +126,7 @@ class Ai1wm_Extensions {
 		// Add Dropbox Extension
 		if ( defined( 'AI1WMDE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMDE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMDE_PLUGIN_KEY,
+				'key'      => AI1WMDE_PURCHASE_ID,
 				'title'    => AI1WMDE_PLUGIN_TITLE,
 				'about'    => AI1WMDE_PLUGIN_ABOUT,
 				'check'    => AI1WMDE_PLUGIN_CHECK,
@@ -140,7 +140,7 @@ class Ai1wm_Extensions {
 		// Add File Extension
 		if ( defined( 'AI1WMTE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMTE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMTE_PLUGIN_KEY,
+				'key'      => AI1WMTE_PURCHASE_ID,
 				'title'    => AI1WMTE_PLUGIN_TITLE,
 				'about'    => AI1WMTE_PLUGIN_ABOUT,
 				'check'    => AI1WMTE_PLUGIN_CHECK,
@@ -154,7 +154,7 @@ class Ai1wm_Extensions {
 		// Add FTP Extension
 		if ( defined( 'AI1WMFE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMFE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMFE_PLUGIN_KEY,
+				'key'      => AI1WMFE_PURCHASE_ID,
 				'title'    => AI1WMFE_PLUGIN_TITLE,
 				'about'    => AI1WMFE_PLUGIN_ABOUT,
 				'check'    => AI1WMFE_PLUGIN_CHECK,
@@ -168,7 +168,7 @@ class Ai1wm_Extensions {
 		// Add Google Cloud Storage Extension
 		if ( defined( 'AI1WMCE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMCE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMCE_PLUGIN_KEY,
+				'key'      => AI1WMCE_PURCHASE_ID,
 				'title'    => AI1WMCE_PLUGIN_TITLE,
 				'about'    => AI1WMCE_PLUGIN_ABOUT,
 				'check'    => AI1WMCE_PLUGIN_CHECK,
@@ -182,7 +182,7 @@ class Ai1wm_Extensions {
 		// Add Google Drive Extension
 		if ( defined( 'AI1WMGE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMGE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMGE_PLUGIN_KEY,
+				'key'      => AI1WMGE_PURCHASE_ID,
 				'title'    => AI1WMGE_PLUGIN_TITLE,
 				'about'    => AI1WMGE_PLUGIN_ABOUT,
 				'check'    => AI1WMGE_PLUGIN_CHECK,
@@ -196,7 +196,7 @@ class Ai1wm_Extensions {
 		// Add Amazon Glacier Extension
 		if ( defined( 'AI1WMRE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMRE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMRE_PLUGIN_KEY,
+				'key'      => AI1WMRE_PURCHASE_ID,
 				'title'    => AI1WMRE_PLUGIN_TITLE,
 				'about'    => AI1WMRE_PLUGIN_ABOUT,
 				'check'    => AI1WMRE_PLUGIN_CHECK,
@@ -210,7 +210,7 @@ class Ai1wm_Extensions {
 		// Add Mega Extension
 		if ( defined( 'AI1WMEE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMEE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMEE_PLUGIN_KEY,
+				'key'      => AI1WMEE_PURCHASE_ID,
 				'title'    => AI1WMEE_PLUGIN_TITLE,
 				'about'    => AI1WMEE_PLUGIN_ABOUT,
 				'check'    => AI1WMEE_PLUGIN_CHECK,
@@ -224,13 +224,13 @@ class Ai1wm_Extensions {
 		// Add Multisite Extension
 		if ( defined( 'AI1WMME_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMME_PLUGIN_NAME ] = array(
-				'key'      => AI1WMME_PLUGIN_KEY,
+				'key'      => AI1WMME_PURCHASE_ID,
 				'title'    => AI1WMME_PLUGIN_TITLE,
 				'about'    => AI1WMME_PLUGIN_ABOUT,
 				'check'    => AI1WMME_PLUGIN_CHECK,
 				'basename' => AI1WMME_PLUGIN_BASENAME,
 				'version'  => AI1WMME_VERSION,
-				'requires' => '4.48',
+				'requires' => '4.53',
 				'short'    => AI1WMME_PLUGIN_SHORT,
 			);
 		}
@@ -238,7 +238,7 @@ class Ai1wm_Extensions {
 		// Add OneDrive Extension
 		if ( defined( 'AI1WMOE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMOE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMOE_PLUGIN_KEY,
+				'key'      => AI1WMOE_PURCHASE_ID,
 				'title'    => AI1WMOE_PLUGIN_TITLE,
 				'about'    => AI1WMOE_PLUGIN_ABOUT,
 				'check'    => AI1WMOE_PLUGIN_CHECK,
@@ -252,7 +252,7 @@ class Ai1wm_Extensions {
 		// Add pCloud Extension
 		if ( defined( 'AI1WMPE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMPE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMPE_PLUGIN_KEY,
+				'key'      => AI1WMPE_PURCHASE_ID,
 				'title'    => AI1WMPE_PLUGIN_TITLE,
 				'about'    => AI1WMPE_PLUGIN_ABOUT,
 				'check'    => AI1WMPE_PLUGIN_CHECK,
@@ -266,13 +266,13 @@ class Ai1wm_Extensions {
 		// Add Pro Plugin
 		if ( defined( 'AI1WMKE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMKE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMKE_PLUGIN_KEY,
+				'key'      => AI1WMKE_PURCHASE_ID,
 				'title'    => AI1WMKE_PLUGIN_TITLE,
 				'about'    => AI1WMKE_PLUGIN_ABOUT,
 				'check'    => AI1WMKE_PLUGIN_CHECK,
 				'basename' => AI1WMKE_PLUGIN_BASENAME,
 				'version'  => AI1WMKE_VERSION,
-				'requires' => '1.0',
+				'requires' => '1.27',
 				'short'    => AI1WMKE_PLUGIN_SHORT,
 			);
 		}
@@ -280,7 +280,7 @@ class Ai1wm_Extensions {
 		// Add S3 Client Extension
 		if ( defined( 'AI1WMNE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMNE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMNE_PLUGIN_KEY,
+				'key'      => AI1WMNE_PURCHASE_ID,
 				'title'    => AI1WMNE_PLUGIN_TITLE,
 				'about'    => AI1WMNE_PLUGIN_ABOUT,
 				'check'    => AI1WMNE_PLUGIN_CHECK,
@@ -294,7 +294,7 @@ class Ai1wm_Extensions {
 		// Add Amazon S3 Extension
 		if ( defined( 'AI1WMSE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMSE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMSE_PLUGIN_KEY,
+				'key'      => AI1WMSE_PURCHASE_ID,
 				'title'    => AI1WMSE_PLUGIN_TITLE,
 				'about'    => AI1WMSE_PLUGIN_ABOUT,
 				'check'    => AI1WMSE_PLUGIN_CHECK,
@@ -308,13 +308,13 @@ class Ai1wm_Extensions {
 		// Add Unlimited Extension
 		if ( defined( 'AI1WMUE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMUE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMUE_PLUGIN_KEY,
+				'key'      => AI1WMUE_PURCHASE_ID,
 				'title'    => AI1WMUE_PLUGIN_TITLE,
 				'about'    => AI1WMUE_PLUGIN_ABOUT,
 				'check'    => AI1WMUE_PLUGIN_CHECK,
 				'basename' => AI1WMUE_PLUGIN_BASENAME,
 				'version'  => AI1WMUE_VERSION,
-				'requires' => '2.68',
+				'requires' => '2.74',
 				'short'    => AI1WMUE_PLUGIN_SHORT,
 			);
 		}
@@ -322,7 +322,7 @@ class Ai1wm_Extensions {
 		// Add URL Extension
 		if ( defined( 'AI1WMLE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMLE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMLE_PLUGIN_KEY,
+				'key'      => AI1WMLE_PURCHASE_ID,
 				'title'    => AI1WMLE_PLUGIN_TITLE,
 				'about'    => AI1WMLE_PLUGIN_ABOUT,
 				'check'    => AI1WMLE_PLUGIN_CHECK,
@@ -336,7 +336,7 @@ class Ai1wm_Extensions {
 		// Add WebDAV Extension
 		if ( defined( 'AI1WMWE_PLUGIN_NAME' ) ) {
 			$extensions[ AI1WMWE_PLUGIN_NAME ] = array(
-				'key'      => AI1WMWE_PLUGIN_KEY,
+				'key'      => AI1WMWE_PURCHASE_ID,
 				'title'    => AI1WMWE_PLUGIN_TITLE,
 				'about'    => AI1WMWE_PLUGIN_ABOUT,
 				'check'    => AI1WMWE_PLUGIN_CHECK,

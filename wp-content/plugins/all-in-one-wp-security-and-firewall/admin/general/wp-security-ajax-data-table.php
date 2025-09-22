@@ -4,7 +4,7 @@
 	 * Administration API: AIOWPSecurity_Ajax_Data_Table class
 	 *
 	 * This class handles the Ajax data table specific to the AIOS data format.
-	 * It is responsible for managing, displaying, and manipulating the data 
+	 * It is responsible for managing, displaying, and manipulating the data
 	 * collected by the AIOS plugin via Ajax requests.
 	 *
 	 * Copied from:
@@ -350,7 +350,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 	 * @since 3.1.0
 	 */
 	public function no_items() {
-		_e('No items found.', 'all-in-one-wp-security-and-firewall');
+		esc_html_e('No items found.', 'all-in-one-wp-security-and-firewall');
 	}
 
 	/**
@@ -382,7 +382,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 		}
 		?>
 <p class="search-box">
-	<label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo $text; ?>:</label>
+	<label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo esc_html($text); ?>:</label>
 	<input type="search" id="<?php echo esc_attr($input_id); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 		<?php submit_button($text, '', '', false, array('id' => 'search-submit')); ?>
 </p>
@@ -430,7 +430,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 		foreach ($views as $class => $view) {
 			$views[$class] = "\t<li class='$class'>$view";
 		}
-		echo implode(" |</li>\n", $views) . "</li>\n";
+		echo implode(" |</li>\n", esc_html($views)) . "</li>\n";
 		echo '</ul>';
 	}
 
@@ -479,14 +479,15 @@ class AIOWPSecurity_Ajax_Data_Table {
 			return;
 		}
 
-		echo '<label for="bulk-action-selector-' . esc_attr($which) . '" class="screen-reader-text">' . __('Select bulk action', 'all-in-one-wp-security-and-firewall') . '</label>';
-		echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr($which) . "\">\n";
-		echo '<option value="-1">' . __('Bulk actions', 'all-in-one-wp-security-and-firewall') . "</option>\n";
+		echo '<label for="bulk-action-selector-' . esc_attr($which) . '" class="screen-reader-text">' . esc_html__('Select bulk action', 'all-in-one-wp-security-and-firewall') . '</label>';
+		echo '<select name="action' . esc_attr($two) . '" id="bulk-action-selector-' . esc_attr($which) . "\">\n";
+		echo '<option value="-1">' . esc_html__('Bulk actions', 'all-in-one-wp-security-and-firewall') . "</option>\n";
 
 		foreach ($this->_actions as $name => $title) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
 
-			echo "\t" . '<option value="' . $name . '"' . $class . '>' . $title . "</option>\n";
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP error. HTML in $class doesn't need escaping.
+			echo "\t" . '<option value="' . esc_attr($name) . '"' . $class . '>' . esc_html($title) . "</option>\n";
 		}
 
 		echo "</select>\n";
@@ -580,12 +581,13 @@ class AIOWPSecurity_Ajax_Data_Table {
 		}
 
 		$extra_checks = "AND post_status != 'auto-draft'";
-		if (!isset($this->_args['data']['post_status']) || 'trash' !== $$this->_args['data']['post_status']) {
+		if (!isset($this->_args['data']['post_status']) || 'trash' !== $this->_args['data']['post_status']) {
 			$extra_checks .= " AND post_status != 'trash'";
 		} elseif (isset($this->_args['data']['post_status'])) {
 			$extra_checks = $wpdb->prepare(' AND post_status = %s', $this->_args['data']['post_status']);
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The $extra_checks variable, although prepared above, cannot be added to the prepare args in this statement.
 		$months = $wpdb->get_results($wpdb->prepare("SELECT DISTINCT YEAR(post_date) AS year, MONTH(post_date) AS month FROM $wpdb->posts WHERE post_type = %s $extra_checks ORDER BY post_date DESC", $post_type));
 
 		/**
@@ -606,9 +608,9 @@ class AIOWPSecurity_Ajax_Data_Table {
 
 		$m = isset($this->_args['data']['m']) ? (int) $this->_args['data']['m'] : 0;
 		?>
-		<label for="filter-by-date" class="screen-reader-text"><?php _e('Filter by date', 'all-in-one-wp-security-and-firewall'); ?></label>
+		<label for="filter-by-date" class="screen-reader-text"><?php esc_html_e('Filter by date', 'all-in-one-wp-security-and-firewall'); ?></label>
 		<select name="m" id="filter-by-date">
-			<option<?php selected($m, 0); ?> value="0"><?php _e('All dates', 'all-in-one-wp-security-and-firewall'); ?></option>
+			<option<?php selected($m, 0); ?> value="0"><?php esc_html_e('All dates', 'all-in-one-wp-security-and-firewall'); ?></option>
 		<?php
 		foreach ($months as $arc_row) {
 			if (0 == $arc_row->year) {
@@ -622,7 +624,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 				selected($m, $year . $month, false),
 				esc_attr($arc_row->year . $month),
 				/* translators: 1: month name, 2: 4-digit year */
-				sprintf(__('%1$s %2$d', 'all-in-one-wp-security-and-firewall'), $wp_locale->get_month($month), $year)
+				sprintf(esc_html__('%1$s %2$d', 'all-in-one-wp-security-and-firewall'), esc_html($wp_locale->get_month($month)), esc_html($year))
 			);
 		}
 		?>
@@ -647,10 +649,10 @@ class AIOWPSecurity_Ajax_Data_Table {
 			if ($current_mode === $mode) {
 				$classes[] = 'current';
 			}
-			printf("<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>\n",
+			printf("<a href='%s' class='%s' id='view-switch-" . esc_attr($mode) . "'><span class='screen-reader-text'>%s</span></a>\n",
 				esc_url(add_query_arg('mode', $mode)),
-				implode(' ', $classes),
-				$title
+				implode(' ', array_map('esc_attr', $classes)),
+				esc_html($title)
 			);
 		}
 		?>
@@ -672,13 +674,16 @@ class AIOWPSecurity_Ajax_Data_Table {
 		$approved_comments_number = number_format_i18n($approved_comments);
 		$pending_comments_number  = number_format_i18n($pending_comments);
 
-		$approved_only_phrase = sprintf(_n('%s comment', '%s comments', $approved_comments), $approved_comments_number);
-		$approved_phrase      = sprintf(_n('%s approved comment', '%s approved comments', $approved_comments), $approved_comments_number);
-		$pending_phrase       = sprintf(_n('%s pending comment', '%s pending comments', $pending_comments), $pending_comments_number);
+		/* translators: %s: Approved comments */
+		$approved_only_phrase = sprintf(_n('%s comment', '%s comments', $approved_comments, 'all-in-one-wp-security-and-firewall'), $approved_comments_number);
+		/* translators: %s: Approved comments */
+		$approved_phrase = sprintf(_n('%s approved comment', '%s approved comments', $approved_comments, 'all-in-one-wp-security-and-firewall'), $approved_comments_number);
+		/* translators: %s: Pending comments */
+		$pending_phrase = sprintf(_n('%s pending comment', '%s pending comments', $pending_comments, 'all-in-one-wp-security-and-firewall'), $pending_comments_number);
 
 		// No comments at all.
 		if (!$approved_comments && !$pending_comments) {
-			printf('<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>', __('No comments', 'all-in-one-wp-security-and-firewall'));
+			printf('<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>', esc_html__('No comments', 'all-in-one-wp-security-and-firewall'));
 			// Approved comments have different display depending on some conditions.
 		} elseif ($approved_comments) {
 			printf('<a href="%s" class="post-com-count post-com-count-approved"><span class="comment-count-approved" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></a>',
@@ -691,14 +696,14 @@ class AIOWPSecurity_Ajax_Data_Table {
 						admin_url('edit-comments.php')
 					)
 				),
-				$approved_comments_number,
-				$pending_comments ? $approved_phrase : $approved_only_phrase
+				esc_html($approved_comments_number),
+				$pending_comments ? esc_html($approved_phrase) : esc_html($approved_only_phrase)
 			);
 		} else {
 			printf(
 				'<span class="post-com-count post-com-count-no-comments"><span class="comment-count comment-count-no-comments" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
-				$approved_comments_number,
-				$pending_comments ? __('No approved comments', 'all-in-one-wp-security-and-firewall') : __('No comments', 'all-in-one-wp-security-and-firewall')
+				esc_html($approved_comments_number),
+				$pending_comments ? esc_html__('No approved comments', 'all-in-one-wp-security-and-firewall') : esc_html__('No comments', 'all-in-one-wp-security-and-firewall')
 			);
 		}
 
@@ -714,14 +719,14 @@ class AIOWPSecurity_Ajax_Data_Table {
 						admin_url('edit-comments.php')
 					)
 				),
-				$pending_comments_number,
-				$pending_phrase
+				esc_html($pending_comments_number),
+				esc_html($pending_phrase)
 			);
 		} else {
 			printf(
 				'<span class="post-com-count post-com-count-pending post-com-count-no-pending"><span class="comment-count comment-count-no-pending" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
-				$pending_comments_number,
-				$approved_comments ? __('No pending comments', 'all-in-one-wp-security-and-firewall') : __('No comments', 'all-in-one-wp-security-and-firewall')
+				esc_html($pending_comments_number),
+				$approved_comments ? esc_html__('No pending comments', 'all-in-one-wp-security-and-firewall') : esc_html__('No comments', 'all-in-one-wp-security-and-firewall')
 			);
 		}
 	}
@@ -799,13 +804,16 @@ class AIOWPSecurity_Ajax_Data_Table {
 			$this->screen->render_screen_reader_content('heading_pagination');
 		}
 
-		$output = '<span class="displaying-num">' . sprintf(_n('%s item', '%s items', $total_items), number_format_i18n($total_items)) . '</span>';
+		/* translators: %s: Total items */
+		$output = '<span class="displaying-num">' . sprintf(_n('%s item', '%s items', esc_html($total_items), 'all-in-one-wp-security-and-firewall'), number_format_i18n($total_items)) . '</span>';
 
 		$current = $this->get_pagenum();
 
 		$removable_query_args = wp_removable_query_args();
 
-		$current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+		$host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+		$request = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+		$current_url = set_url_scheme('http://' . $host . $request);
 
 		$current_url = remove_query_arg($removable_query_args, $current_url);
 
@@ -837,7 +845,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 			$page_links[] = sprintf(
 				"<a class='first-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url(remove_query_arg('paged', $current_url)),
-				__('First page', 'all-in-one-wp-security-and-firewall'),
+				esc_html__('First page', 'all-in-one-wp-security-and-firewall'),
 				'&laquo;'
 			);
 		}
@@ -848,7 +856,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 			$page_links[] = sprintf(
 				"<a class='prev-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url(add_query_arg('paged', max(1, $current - 1), $current_url)),
-				__('Previous page', 'all-in-one-wp-security-and-firewall'),
+				esc_html__('Previous page', 'all-in-one-wp-security-and-firewall'),
 				'&lsaquo;'
 			);
 		}
@@ -865,7 +873,8 @@ class AIOWPSecurity_Ajax_Data_Table {
 			);
 		}
 		$html_total_pages = sprintf("<span class='total-pages'>%s</span>", number_format_i18n($total_pages));
-		$page_links[]     = $total_pages_before . sprintf(_x('%1$s of %2$s', 'paging'), $html_current_page, $html_total_pages) . $total_pages_after;
+		/* translators: 1: Current page, 2: Total pages */
+		$page_links[] = $total_pages_before . sprintf(esc_html_x('%1$s of %2$s', 'paging', 'all-in-one-wp-security-and-firewall'), $html_current_page, $html_total_pages) . $total_pages_after;
 
 		if ($disable_next) {
 			$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&rsaquo;</span>';
@@ -873,7 +882,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 			$page_links[] = sprintf(
 				"<a class='next-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url(add_query_arg('paged', min($total_pages, $current + 1), $current_url)),
-				__('Next page', 'all-in-one-wp-security-and-firewall'),
+				esc_html__('Next page', 'all-in-one-wp-security-and-firewall'),
 				'&rsaquo;'
 			);
 		}
@@ -884,7 +893,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 			$page_links[] = sprintf(
 				"<a class='last-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url(add_query_arg('paged', $total_pages, $current_url)),
-				__('Last page', 'all-in-one-wp-security-and-firewall'),
+				esc_html__('Last page', 'all-in-one-wp-security-and-firewall'),
 				'&raquo;'
 			);
 		}
@@ -893,15 +902,16 @@ class AIOWPSecurity_Ajax_Data_Table {
 		if (!empty($infinite_scroll)) {
 			$pagination_links_class .= ' hide-if-js';
 		}
-		$output .= "\n<span class='$pagination_links_class'>" . join("\n", $page_links) . '</span>';
+		$output .= "\n<span class='" . $pagination_links_class . "'>" . join("\n", $page_links) . '</span>';
 
 		if ($total_pages) {
 			$page_class = $total_pages < 2 ? ' one-page' : '';
 		} else {
 			$page_class = ' no-pages';
 		}
-		$this->_pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
+		$this->_pagination = "<div class='tablenav-pages" . $page_class . "'>" . $output . "</div>";
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Necessary escaping done above.
 		echo $this->_pagination;
 	}
 
@@ -1089,7 +1099,9 @@ class AIOWPSecurity_Ajax_Data_Table {
 	public function print_column_headers($with_id = true) {
 		list($columns, $hidden, $sortable, $primary) = $this->get_column_info();
 
-		$current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+		$host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+		$request = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+		$current_url = set_url_scheme('http://' . $host . $request);
 		$current_url = remove_query_arg('paged', $current_url);
 
 		if (isset($this->_args['data']['orderby'])) {
@@ -1097,7 +1109,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 		} else {
 			$current_orderby = '';
 		}
-	
+
 		if (isset($this->_args['data']['order']) && 'desc' === $this->_args['data']['order']) {
 			$current_order = 'desc';
 		} else {
@@ -1152,6 +1164,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 				$class = "class='" . join(' ', $class) . "'";
 			}
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped earlier in other functions.
 			echo "<$tag $scope $id $class>$column_display_name</$tag>";
 		}
 	}
@@ -1168,7 +1181,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 
 		$this->screen->render_screen_reader_content('heading_list');
 		?>
-<table class="wp-list-table <?php echo implode(' ', $this->get_table_classes()); ?>">
+<table class="wp-list-table <?php echo implode(' ', array_map('esc_attr', $this->get_table_classes())); ?>">
 	<thead>
 	<tr>
 		<?php $this->print_column_headers(); ?>
@@ -1178,7 +1191,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 	<tbody id="the-list"
 		<?php
 		if ($singular) {
-			echo " data-wp-lists='list:$singular'";
+			echo " data-wp-lists='list:" . esc_attr($singular) . "'";
 		}
 		?>
 		>
@@ -1253,7 +1266,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 		if ($this->has_items()) {
 			$this->display_rows();
 		} else {
-			echo '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
+			echo '<tr class="no-items"><td class="colspanchange" colspan="' . esc_attr($this->get_column_count()) . '">';
 			$this->no_items();
 			echo '</td></tr>';
 		}
@@ -1326,12 +1339,13 @@ class AIOWPSecurity_Ajax_Data_Table {
 			$data = 'data-colname="' . wp_strip_all_tags($column_display_name) . '"';
 
 			$attributes = "class='$classes' $data";
-
 			if ('cb' === $column_name) {
 				echo '<th scope="row" class="check-column">';
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Escaped earlier in other functions.
 				echo $this->column_cb($item);
 				echo '</th>';
 			} elseif (method_exists($this, '_column_' . $column_name)) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Escaped earlier in other functions.
 				echo call_user_func(
 					array($this, '_column_' . $column_name),
 					$item,
@@ -1340,13 +1354,19 @@ class AIOWPSecurity_Ajax_Data_Table {
 					$primary
 				);
 			} elseif (method_exists($this, 'column_' . $column_name)) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Escaped earlier in other functions.
 				echo "<td $attributes>";
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Escaped earlier in other functions.
 				echo call_user_func(array($this, 'column_' . $column_name), $item);
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Escaped earlier in other functions.
 				echo $this->handle_row_actions($item, $column_name, $primary);
 				echo '</td>';
 			} else {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Escaped earlier in other functions.
 				echo "<td $attributes>";
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Escaped earlier in other functions.
 				echo $this->column_default($item, $column_name);
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP Error. Escaped earlier in other functions.
 				echo $this->handle_row_actions($item, $column_name, $primary);
 				echo '</td>';
 			}
@@ -1393,7 +1413,7 @@ class AIOWPSecurity_Ajax_Data_Table {
 		ob_start();
 		$this->pagination('top');
 		$pagination_top = ob_get_clean();
-	 
+
 		ob_start();
 		$this->pagination('bottom');
 		$pagination_bottom = ob_get_clean();
@@ -1409,7 +1429,8 @@ class AIOWPSecurity_Ajax_Data_Table {
 
 		if (isset($this->_pagination_args['total_items'])) {
 			$response['total_items_i18n'] = sprintf(
-				_n('%s item', '%s items', $this->_pagination_args['total_items']),
+				/* translators: %s: Total items */
+				_n('%s item', '%s items', $this->_pagination_args['total_items'], 'all-in-one-wp-security-and-firewall'),
 				number_format_i18n($this->_pagination_args['total_items'])
 			);
 		}

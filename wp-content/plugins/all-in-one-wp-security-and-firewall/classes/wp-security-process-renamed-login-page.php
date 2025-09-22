@@ -17,7 +17,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 	}
 
 	public function aiowps_login_init() {
-		$parsed_request = parse_url($_SERVER['REQUEST_URI']);
+		$parsed_request = isset($_SERVER['REQUEST_URI']) ? wp_parse_url(sanitize_url(wp_unslash($_SERVER['REQUEST_URI']))) : '';
 		if ($parsed_request && preg_match('/wp-login\.php$/', $parsed_request['path'])) {
 			AIOWPSecurity_Process_Renamed_Login_Page::aiowps_set_404();
 		}
@@ -84,7 +84,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 				parse_str($args[1], $args);
 				$url = esc_url(add_query_arg($args, AIOWPSecurity_Process_Renamed_Login_Page::new_login_url()));
 				$url = html_entity_decode($url);
-			} elseif (isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-admin/install.php')) {
+			} elseif (isset($_SERVER['REQUEST_URI']) && stripos(urldecode(sanitize_url(wp_unslash($_SERVER['REQUEST_URI']))), 'wp-admin/install.php')) {
 				return $url;
 			} else {
 				$url = AIOWPSecurity_Process_Renamed_Login_Page::new_login_url();
@@ -110,7 +110,10 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 
 		//The following will process the native wordpress post password protection form
 		//Normally this is done by wp-login.php file but we cannot use that since the login page has been renamed
-		$action = isset($_GET['action']) ? strip_tags($_GET['action']) : '';
+		
+		// Bots with URLs like: /index.php?action[]=aaaa will return an array here. It needs to be a string.
+		$action = (isset($_GET['action']) && is_string($_GET['action'])) ? sanitize_text_field(wp_unslash($_GET['action'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce available.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- No nonce available.
 		if (isset($_POST['post_password']) && 'postpass' == $action) {
 
 			// Check if the captcha is enabled for the password protected pages and process validation if the login page was renamed
@@ -132,6 +135,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 			 * @param int $expires The expiry time, as passed to setcookie().
 			 */
 			$expire = apply_filters('post_password_expires', time() + 10 * DAY_IN_SECONDS);
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- No nonce available, not recommended to sanitize passwords.
 			setcookie('wp-postpass_' . COOKIEHASH, $hasher->HashPassword(wp_unslash($_POST['post_password'])), $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
 
 			wp_safe_redirect(wp_get_referer());
@@ -139,28 +143,29 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		}
 
 		//case where someone attempting to reach wp-admin
-		if (is_admin() && !is_user_logged_in() && basename($_SERVER["SCRIPT_FILENAME"]) !== 'admin-post.php') {
+		if (is_admin() && !is_user_logged_in() && (isset($_SERVER["SCRIPT_FILENAME"]) ? basename(sanitize_text_field(wp_unslash($_SERVER["SCRIPT_FILENAME"]))) : '') !== 'admin-post.php') {
 			//Fix to prevent fatal error caused by some themes and Yoast SEO
 			do_action('aiowps_before_wp_die_renamed_login');
-			wp_die(__('You do not have permission to access this page.', 'all-in-one-wp-security-and-firewall') .  ' ' . __('Please log in and try again.', 'all-in-one-wp-security-and-firewall'), 403);
+			wp_die(esc_html__('You do not have permission to access this page.', 'all-in-one-wp-security-and-firewall') .  ' ' . esc_html__('Please log in and try again.', 'all-in-one-wp-security-and-firewall'), 403);
 		}
 
 		//case where someone attempting to reach wp-login
-		if (isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-login.php') && !is_user_logged_in()) {
+		if (isset($_SERVER['REQUEST_URI']) && stripos(urldecode(sanitize_url(wp_unslash($_SERVER['REQUEST_URI']))), 'wp-login.php') && !is_user_logged_in()) {
 
 			// Handle export personal data request for rename login case
-			if (isset($_GET['request_id'])) {
-				$request_id = (int) $_GET['request_id'];
+			if (isset($_GET['request_id'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
+				$request_id = (int) sanitize_text_field(wp_unslash($_GET['request_id'])); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
 				$result = '';
-				if (isset($_GET['confirm_key'])) {
-					$key = sanitize_text_field(wp_unslash($_GET['confirm_key']));
+				if (isset($_GET['confirm_key'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
+					$key = sanitize_text_field(wp_unslash($_GET['confirm_key'])); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
 					$result = wp_validate_user_request_key($request_id, $key);
 				} else {
-					$result = new WP_Error('invalid_key', __('Invalid key', 'all-in-one-wp-security-and-firewall'));
+					$result = new WP_Error('invalid_key', esc_html__('Invalid key', 'all-in-one-wp-security-and-firewall'));
 				}
 
 				if (is_wp_error($result)) {
-						wp_die($result);
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- PCP error. $result is WPError object with sanitized strings.
+					wp_die($result);
 				} elseif (!empty($result)) {
 					_wp_privacy_account_request_confirmed($request_id);
 					$message = _wp_privacy_account_request_confirmed_message($request_id);
@@ -178,8 +183,9 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 			}
 		}
 
-		//case where someone attempting to reach the standard register pages
-		if (isset($_SERVER['REQUEST_URI']) && stripos(urldecode($_SERVER['REQUEST_URI']), 'wp-register.php')) {
+		//case where someone attempting to reach the standard register or signup pages
+		$request_uri = urldecode(sanitize_url(wp_unslash($_SERVER['REQUEST_URI'])));
+		if ('' !== $request_uri && stripos($request_uri, 'wp-register.php') || '' !== $request_uri && stripos($request_uri, 'wp-signup.php')) {
 			//Check if the maintenance (lockout) mode is active - if so prevent access to site by not displaying 404 page!
 			if ('1' == $aio_wp_security->configs->get_value('aiowps_site_lockout')) {
 				AIOWPSecurity_WP_Loaded_Tasks::site_lockout_tasks();
@@ -194,8 +200,8 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 			if (empty($action) && is_user_logged_in()) {
 				//if user is already logged in but tries to access the renamed login page, send them to the dashboard
 				// or to requested redirect-page, filtered in 'login_redirect'.
-				if (isset($_REQUEST['redirect_to'])) {
-					$redirect_to = wp_sanitize_redirect($_REQUEST['redirect_to']);
+				if (isset($_REQUEST['redirect_to'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
+					$redirect_to = wp_sanitize_redirect(wp_unslash($_REQUEST['redirect_to'])); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
 					$redirect_to = wp_validate_redirect($redirect_to, apply_filters('wp_safe_redirect_fallback', admin_url(), 302));
 					$requested_redirect_to = $redirect_to;
 				} else {
@@ -208,7 +214,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 				global $wp_version;
 				do_action('aiowps_rename_login_load');
 				// logout action called by WooCommerce does not apply the login whitelist which shows a 403 error for the customer
-				if (!(isset($_GET['action']) && 'logout' == $_GET['action'])) {
+				if (!(isset($_GET['action']) && 'logout' == $_GET['action'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
 					AIOWPSecurity_Utility_IP::check_login_whitelist_and_forbid();
 				}
 
@@ -262,7 +268,7 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		
 		if (empty($_SERVER['REQUEST_URI'])) return false;
 	
-		$parsed_url_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$parsed_url_path = isset($_SERVER['REQUEST_URI']) ? wp_parse_url(sanitize_url(wp_unslash($_SERVER['REQUEST_URI'])), PHP_URL_PATH) : '';
 		$home_url_with_slug = home_url($login_slug, 'relative');
 
 		/*
@@ -270,10 +276,11 @@ class AIOWPSecurity_Process_Renamed_Login_Page {
 		 */
 		if (function_exists('wpml_object_id') || function_exists('trp_enable_translatepress')) {
 			$home_url_with_slug = home_url($login_slug);
-			$parsed_home_url_with_slug = parse_url($home_url_with_slug);
+			$parsed_home_url_with_slug = wp_parse_url($home_url_with_slug);
 			$home_url_with_slug = $parsed_home_url_with_slug['path']; //this will return just the path minus the protocol and host
 		}
-		
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- PCP warning. No nonce available.
 		if (untrailingslashit($parsed_url_path) === $home_url_with_slug || (!get_option('permalink_structure') && isset($_GET[$login_slug]))) {
 			return true;
 		}

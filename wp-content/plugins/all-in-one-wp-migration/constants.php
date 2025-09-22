@@ -37,7 +37,7 @@ define( 'AI1WM_DEBUG', false );
 // ==================
 // = Plugin Version =
 // ==================
-define( 'AI1WM_VERSION', '7.97' );
+define( 'AI1WM_VERSION', '7.99' );
 
 // ===============
 // = Plugin Name =
@@ -73,16 +73,6 @@ define( 'AI1WM_CONTROLLER_PATH', AI1WM_LIB_PATH . DIRECTORY_SEPARATOR . 'control
 // = Model Path =
 // ==============
 define( 'AI1WM_MODEL_PATH', AI1WM_LIB_PATH . DIRECTORY_SEPARATOR . 'model' );
-
-// ===============
-// = Export Path =
-// ===============
-define( 'AI1WM_EXPORT_PATH', AI1WM_MODEL_PATH . DIRECTORY_SEPARATOR . 'export' );
-
-// ===============
-// = Import Path =
-// ===============
-define( 'AI1WM_IMPORT_PATH', AI1WM_MODEL_PATH . DIRECTORY_SEPARATOR . 'import' );
 
 // =============
 // = View Path =
@@ -521,6 +511,16 @@ define( 'AI1WM_STORAGE_INDEX_PHP', AI1WM_STORAGE_PATH . DIRECTORY_SEPARATOR . 'i
 // = Storage index.html File =
 // ===========================
 define( 'AI1WM_STORAGE_INDEX_HTML', AI1WM_STORAGE_PATH . DIRECTORY_SEPARATOR . 'index.html' );
+
+// ==========================
+// = Storage .htaccess File =
+// ==========================
+define( 'AI1WM_STORAGE_HTACCESS', AI1WM_STORAGE_PATH . DIRECTORY_SEPARATOR . '.htaccess' );
+
+// ===========================
+// = Storage web.config File =
+// ===========================
+define( 'AI1WM_STORAGE_WEBCONFIG', AI1WM_STORAGE_PATH . DIRECTORY_SEPARATOR . 'web.config' );
 
 // ==========================
 // = Backups index.php File =

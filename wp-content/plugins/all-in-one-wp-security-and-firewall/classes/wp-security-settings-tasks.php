@@ -28,6 +28,7 @@ class AIOWPSecurity_Settings_Tasks {
 		if ($res) {
 			$msg['updated'] = __('Settings were successfully saved.', 'all-in-one-wp-security-and-firewall');
 		} else {
+			/* translators: %s: .htaccess path */
 			$msg['error'] = sprintf(__('Could not write to the %s file.', 'all-in-one-wp-security-and-firewall'), AIOWPSecurity_Utility_File::get_home_path().'.htaccess') . ' ' . __('Please check the file permissions.', 'all-in-one-wp-security-and-firewall');
 		}
 		return $msg;
@@ -55,10 +56,12 @@ class AIOWPSecurity_Settings_Tasks {
 		if ($res) {
 			$msg['updated'] = __('All the security features have been disabled successfully.', 'all-in-one-wp-security-and-firewall');
 		} else {
+			/* translators: %s: .htaccess path */
 			$msg['error'][] = sprintf(__('Could not write to the %s file.', 'all-in-one-wp-security-and-firewall'), AIOWPSecurity_Utility_File::get_home_path().'.htaccess') . ' ' . sprintf(__('Please restore it manually using the restore functionality in the "%s" tab.', 'all-in-one-wp-security-and-firewall'), '.htaccess ' . __('file', 'all-in-one-wp-security-and-firewall'));
 		}
 
 		if (!$res2) {
+			/* translators: %s: wp-config.php path */
 			$msg['error'][] = sprintf(__('Could not write to the %s file.', 'all-in-one-wp-security-and-firewall'), AIOWPSecurity_Utility_File::get_home_path().'wp-config.php') . ' ' . sprintf(__('Please restore it manually using the restore functionality in the "%s" tab.', 'all-in-one-wp-security-and-firewall'), 'wp-config.php ' . __('file', 'all-in-one-wp-security-and-firewall'));
 		}
 		return $msg;
@@ -83,6 +86,7 @@ class AIOWPSecurity_Settings_Tasks {
 		if ($res) {
 			$msg['updated'] = __('All firewall rules have been disabled successfully.', 'all-in-one-wp-security-and-firewall');
 		} else {
+			/* translators: %s: .htaccess path, %s file tab name. */
 			$msg['error'] = sprintf(__('Could not write to the %s file.', 'all-in-one-wp-security-and-firewall'), AIOWPSecurity_Utility_File::get_home_path().'.htaccess') . ' ' . sprintf(__('Please restore it manually using the restore functionality in the "%s" tab.', 'all-in-one-wp-security-and-firewall'), '.htaccess ' . __('file', 'all-in-one-wp-security-and-firewall'));
 		}
 		return $msg;

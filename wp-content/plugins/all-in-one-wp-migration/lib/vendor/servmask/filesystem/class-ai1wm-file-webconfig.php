@@ -32,29 +32,71 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Ai1wm_File_Webconfig {
 
 	/**
-	 * Create web.config file
+	 * Create backups web.config file
 	 *
 	 * @param  string  $path Path to file
 	 * @return boolean
 	 */
-	public static function create( $path ) {
+	public static function backups( $path ) {
 		return Ai1wm_File::create(
 			$path,
 			implode(
 				PHP_EOL,
 				array(
+					'<?xml version="1.0" encoding="utf-8"?>',
 					'<configuration>',
-					'<system.webServer>',
-					'<staticContent>',
-					'<mimeMap fileExtension=".wpress" mimeType="application/octet-stream" />',
-					'</staticContent>',
-					'<defaultDocument>',
-					'<files>',
-					'<add value="index.php" />',
-					'</files>',
-					'</defaultDocument>',
-					'<directoryBrowse enabled="false" />',
-					'</system.webServer>',
+					'	<system.webServer>',
+					'		<staticContent>',
+					'			<mimeMap fileExtension=".wpress" mimeType="application/octet-stream" />',
+					'		</staticContent>',
+					'		<defaultDocument>',
+					'			<files>',
+					'				<add value="index.php" />',
+					'			</files>',
+					'		</defaultDocument>',
+					'		<directoryBrowse enabled="false" />',
+					'	</system.webServer>',
+					'</configuration>',
+				)
+			)
+		);
+	}
+
+	/**
+	 * Create storage web.config file
+	 *
+	 * @param  string  $path Path to file
+	 * @return boolean
+	 */
+	public static function storage( $path ) {
+		return Ai1wm_File::create(
+			$path,
+			implode(
+				PHP_EOL,
+				array(
+					'<?xml version="1.0" encoding="utf-8"?>',
+					'<configuration>',
+					'	<system.webServer>',
+					'		<security>',
+					'			<authorization>',
+					'				<deny users="*" />',
+					'			</authorization>',
+					'		</security>',
+					'		<requestFiltering>',
+					'			<fileExtensions allowUnlisted="false">',
+					'				<add fileExtension=".log" allowed="true" />',
+					'			</fileExtensions>',
+					'		</requestFiltering>',
+					'		<staticContent>',
+					'			<mimeMap fileExtension=".log" mimeType="text/plain" />',
+					'		</staticContent>',
+					'		<defaultDocument>',
+					'			<files>',
+					'				<add value="index.php" />',
+					'			</files>',
+					'		</defaultDocument>',
+					'		<directoryBrowse enabled="false" />',
+					'	</system.webServer>',
 					'</configuration>',
 				)
 			)

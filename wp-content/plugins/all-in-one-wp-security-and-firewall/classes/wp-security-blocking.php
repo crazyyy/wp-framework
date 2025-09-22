@@ -67,7 +67,7 @@ class AIOWPSecurity_Blocking {
 		$user = wp_get_current_user();
 		$roles_allowed_to_block_ips = apply_filters('aio_roles_allowed_to_block_ips', array('administrator', 'editor', 'author'));
 		if ('spam_discard' != $reason && array_intersect($roles_allowed_to_block_ips, $user->roles) && AIOWPSecurity_Utility_IP::get_user_ip_address() == $ip_address) {
-			return;
+			return false;
 		}
 
 		//Check if this IP address is already in the block list
@@ -125,7 +125,8 @@ class AIOWPSecurity_Blocking {
 			return; //Visitor IP is not blocked - allow page to load
 		} else {
 			//block this visitor!!
-			AIOWPSecurity_Utility::redirect_to_url('http://127.0.0.1');
+			$redirect_url = sanitize_url(apply_filters('aios_blocked_request_redirect_url', 'http://127.0.0.1'));
+			AIOWPSecurity_Utility::redirect_to_url($redirect_url);
 		}
 		return;
 

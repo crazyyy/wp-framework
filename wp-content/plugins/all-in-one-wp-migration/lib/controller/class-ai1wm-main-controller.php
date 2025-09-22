@@ -273,6 +273,8 @@ class Ai1wm_Main_Controller {
 	 */
 	public function setup_storage_folder() {
 		$this->create_storage_folder( AI1WM_STORAGE_PATH );
+		$this->create_storage_htaccess( AI1WM_STORAGE_HTACCESS );
+		$this->create_storage_webconfig( AI1WM_STORAGE_WEBCONFIG );
 		$this->create_storage_index_php( AI1WM_STORAGE_INDEX_PHP );
 		$this->create_storage_index_html( AI1WM_STORAGE_INDEX_HTML );
 	}
@@ -369,6 +371,38 @@ class Ai1wm_Main_Controller {
 	}
 
 	/**
+	 * Create storage .htaccess file
+	 *
+	 * @param  string Path to file
+	 * @return void
+	 */
+	public function create_storage_htaccess( $path ) {
+		if ( ! Ai1wm_File_Htaccess::storage( $path ) ) {
+			if ( is_multisite() ) {
+				return add_action( 'network_admin_notices', array( $this, 'storage_htaccess_notice' ) );
+			} else {
+				return add_action( 'admin_notices', array( $this, 'storage_htaccess_notice' ) );
+			}
+		}
+	}
+
+	/**
+	 * Create storage web.config file
+	 *
+	 * @param  string Path to file
+	 * @return void
+	 */
+	public function create_storage_webconfig( $path ) {
+		if ( ! Ai1wm_File_Webconfig::storage( $path ) ) {
+			if ( is_multisite() ) {
+				return add_action( 'network_admin_notices', array( $this, 'storage_webconfig_notice' ) );
+			} else {
+				return add_action( 'admin_notices', array( $this, 'storage_webconfig_notice' ) );
+			}
+		}
+	}
+
+	/**
 	 * Create storage index.php file
 	 *
 	 * @param  string Path to file
@@ -407,7 +441,7 @@ class Ai1wm_Main_Controller {
 	 * @return void
 	 */
 	public function create_backups_htaccess( $path ) {
-		if ( ! Ai1wm_File_Htaccess::create( $path ) ) {
+		if ( ! Ai1wm_File_Htaccess::backups( $path ) ) {
 			if ( is_multisite() ) {
 				return add_action( 'network_admin_notices', array( $this, 'backups_htaccess_notice' ) );
 			} else {
@@ -423,7 +457,7 @@ class Ai1wm_Main_Controller {
 	 * @return void
 	 */
 	public function create_backups_webconfig( $path ) {
-		if ( ! Ai1wm_File_Webconfig::create( $path ) ) {
+		if ( ! Ai1wm_File_Webconfig::backups( $path ) ) {
 			if ( is_multisite() ) {
 				return add_action( 'network_admin_notices', array( $this, 'backups_webconfig_notice' ) );
 			} else {
@@ -512,6 +546,24 @@ class Ai1wm_Main_Controller {
 	 */
 	public function storage_path_notice() {
 		Ai1wm_Template::render( 'main/storage-path-notice' );
+	}
+
+	/**
+	 * Display notice for .htaccess file in storage directory
+	 *
+	 * @return void
+	 */
+	public function storage_htaccess_notice() {
+		Ai1wm_Template::render( 'main/storage-htaccess-notice' );
+	}
+
+	/**
+	 * Display notice for web.config file in storage directory
+	 *
+	 * @return void
+	 */
+	public function storage_webconfig_notice() {
+		Ai1wm_Template::render( 'main/storage-webconfig-notice' );
 	}
 
 	/**
@@ -723,7 +775,7 @@ class Ai1wm_Main_Controller {
 			'ai1wm_feedback',
 			array(
 				'ajax'       => array(
-					'url' => wp_make_link_relative( admin_url( 'admin-ajax.php?action=ai1wm_feedback' ) ),
+					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_import' => 1 ), admin_url( 'admin-ajax.php?action=ai1wm_feedback' ) ) ),
 				),
 				'secret_key' => get_option( AI1WM_SECRET_KEY ),
 			)
@@ -1074,16 +1126,6 @@ class Ai1wm_Main_Controller {
 			AI1WM_VERSION,
 			false
 		);
-
-		wp_localize_script(
-			'ai1wm_updater',
-			'ai1wm_updater',
-			array(
-				'ajax' => array(
-					'url' => wp_make_link_relative( add_query_arg( array( 'ai1wm_nonce' => wp_create_nonce( 'ai1wm_updater' ) ), admin_url( 'admin-ajax.php?action=ai1wm_updater' ) ) ),
-				),
-			)
-		);
 	}
 
 	/**
@@ -1283,11 +1325,6 @@ class Ai1wm_Main_Controller {
 		add_action( 'wp_ajax_ai1wm_backup_list', 'Ai1wm_Backups_Controller::backup_list' );
 		add_action( 'wp_ajax_ai1wm_backup_list_content', 'Ai1wm_Backups_Controller::backup_list_content' );
 		add_action( 'wp_ajax_ai1wm_backup_download_file', 'Ai1wm_Backups_Controller::download_file' );
-
-		// Update actions
-		if ( current_user_can( 'update_plugins' ) ) {
-			add_action( 'wp_ajax_ai1wm_updater', 'Ai1wm_Updater_Controller::updater' );
-		}
 	}
 
 	/**
@@ -1331,8 +1368,6 @@ class Ai1wm_Main_Controller {
 	 * @return void
 	 */
 	public function handle_error_cleanup( $params, $exception = null ) {
-		if ( ! $exception instanceof Ai1wm_Import_Retry_Exception ) {
-			Ai1wm_Directory::delete( ai1wm_storage_path( $params ) );
-		}
+		Ai1wm_Directory::delete( ai1wm_storage_path( $params ) );
 	}
 }

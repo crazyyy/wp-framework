@@ -69,6 +69,7 @@ class Simba_TFA_Encryption_Muplugin {
 		if (!isset($info['dirname'])) {
 			return new WP_Error(
 				'file_no_directory',
+				/* translators: %s: Multi user plugin directory */
 				__('Encrypt secrets feature not enabled: no directory has been set.', 'all-in-one-wp-security-and-firewall') . ' ' . sprintf(__('Please check your %s constant is valid', 'all-in-one-wp-security-and-firewall'), 'WPMU_PLUGIN_DIR'),
 				$this->file_path
 			);
@@ -77,6 +78,7 @@ class Simba_TFA_Encryption_Muplugin {
 		if (false === wp_mkdir_p($info['dirname'])) {
 			return new WP_Error(
 				'file_no_directory_created',
+				/* translators: %s: Multi user plugin directory */
 				sprintf(__('The encrypt secrets feature was not enabled: your mu-plugins directory could not be automatically created; therefore, please use your web hosting file manager or FTP to manually create this folder and then try again: %s', 'all-in-one-wp-security-and-firewall'), $this->get_mu_plugin_dir()),
 				$info['dirname']
 			);
@@ -85,7 +87,8 @@ class Simba_TFA_Encryption_Muplugin {
 		if (false === @file_put_contents($this->file_path, $this->get_contents())) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- ignore this as it is handled by the caller
 			return new WP_Error(
 				'file_no_contents',
-				__('The encrypt secrets feature was not enabled: attempting to write the mu-plugin file contents failed; therefore, please create the file manually.', 'all-in-one-wp-security-and-firewall') . "<br><br>" . sprintf(__('Add the following code to the file %s'), $this->get_file_path()) . "\n" . '<br><br><code>' . nl2br(esc_html($this->get_contents())) . '</code><br><br>' . __('Once you have added the above code then press the button to turn on encryption again', 'all-in-one-wp-security-and-firewall'),
+				/* translators: %s: File path. */
+				__('The encrypt secrets feature was not enabled: attempting to write the mu-plugin file contents failed; therefore, please create the file manually.', 'all-in-one-wp-security-and-firewall') . "<br><br>" . sprintf(__('Add the following code to the file %s', 'all-in-one-wp-security-and-firewall'), $this->get_file_path()) . "\n" . '<br><br><code>' . nl2br(esc_html($this->get_contents())) . '</code><br><br>' . __('Once you have added the above code then press the button to turn on encryption again', 'all-in-one-wp-security-and-firewall'),
 				$info['dirname']
 			);
 		}

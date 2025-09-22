@@ -16,10 +16,12 @@ class Simba_TFA_Frontend {
 		add_action('wp_ajax_tfa_frontend', array($this, 'ajax'));
 		add_shortcode('twofactor_user_settings', array($this, 'tfa_user_settings_front'));
 
-		register_block_type('twofactor/user-settings', array(
-			'editor_script' => 'twofactor-gutenberg-blocks',
-			'render_callback' => array($this, 'tfa_user_settings_front'),
-		));
+		if (!WP_Block_Type_Registry::get_instance()->is_registered('twofactor/user-settings')) {
+			register_block_type('twofactor/user-settings', array(
+				'editor_script' => 'twofactor-gutenberg-blocks',
+				'render_callback' => array($this, 'tfa_user_settings_front'),
+			));
+		}
 	}
 
 	/**
@@ -192,18 +194,23 @@ class Simba_TFA_Frontend {
 	/**
 	 * Shortcode function for twofactor_user_settings
 	 *
-	 * @param Array $atts
-	 * @param Null|String $content
+	 * @param Array $atts		   - shortcode attributes
 	 *
 	 * @return String
 	 */
-	public function tfa_user_settings_front($atts, $content = null) {
+	public function tfa_user_settings_front($atts = array()) {
 
 		if (!is_user_logged_in()) return '';
 
+		$atts = array_change_key_case((array)$atts, CASE_LOWER);
+		
+		$atts = shortcode_atts(array('show_algorithm_selector' => 'no'), $atts);
+
+		$show_algorithm_selector = ('yes' === $atts['show_algorithm_selector']);
+		
 		global $current_user;
 		
-		return $this->mother->include_template('shortcode-tfa-user-settings.php', array('is_activated_for_user' => $current_user->ID, 'tfa_frontend' => $this), true);
+		return $this->mother->include_template('shortcode-tfa-user-settings.php', array('is_activated_for_user' => $current_user->ID, 'tfa_frontend' => $this, 'show_algorithm_selector' => $show_algorithm_selector), true);
 
 	}
 }

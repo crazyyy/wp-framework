@@ -61,7 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="ai1wm-field ai1wm-feedback-terms-segment">
 			<label for="ai1wm-feedback-terms">
 				<input type="checkbox" class="ai1wm-feedback-terms" id="ai1wm-feedback-terms" />
-				<?php echo wp_kses( __( 'I agree to let All-in-One WP Migration use my <strong>email</strong> to respond to my request. <a href="https://www.iubenda.com/privacy-policy/946881" target="_blank">Privacy policy</a>', 'all-in-one-wp-migration' ), ai1wm_allowed_html_tags() ); ?>
+				<?php echo wp_kses( __( 'I agree to let All-in-One WP Migration use my <strong>email</strong> to respond to my request.', 'all-in-one-wp-migration' ), ai1wm_allowed_html_tags() ); ?>
 			</label>
 		</div>
 		<div class="ai1wm-field">

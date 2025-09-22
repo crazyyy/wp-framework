@@ -14,6 +14,9 @@ class AIOWPSecurity_Installer {
 		),
 		'2.0.10' => array(
 			'delete_aiowps_temp_configs_option',
+		),
+		'2.1.4' => array(
+			'update_tables_to_innodb',
 		)
 	);
 
@@ -126,7 +129,7 @@ class AIOWPSecurity_Installer {
 		  KEY failed_login_ip (failed_login_ip),
 		  KEY is_lockout_email_sent (is_lockout_email_sent),
 		  KEY unlock_key (unlock_key)
-		)" . $charset_collate . ";";
+		) ENGINE=InnoDB " . $charset_collate . ";";
 		dbDelta($ld_tbl_sql);
 
 		$gm_tbl_sql = "CREATE TABLE " . $aiowps_global_meta_tbl_name . " (
@@ -144,7 +147,7 @@ class AIOWPSecurity_Installer {
 		meta_value4 longtext NOT NULL,
 		meta_value5 longtext NOT NULL,
 		PRIMARY KEY  (meta_id)
-		)" . $charset_collate . ";";
+		) ENGINE=InnoDB " . $charset_collate . ";";
 		dbDelta($gm_tbl_sql);
 
 		$evt_tbl_sql = "CREATE TABLE " . $aiowps_event_tbl_name . " (
@@ -160,7 +163,7 @@ class AIOWPSecurity_Installer {
 		country_code varchar(50),
 		event_data longtext,
 		PRIMARY KEY  (id)
-		)" . $charset_collate . ";";
+		) ENGINE=InnoDB " . $charset_collate . ";";
 		dbDelta($evt_tbl_sql);
 
 		$pb_tbl_sql = "CREATE TABLE " . $perm_block_tbl_name . " (
@@ -173,7 +176,7 @@ class AIOWPSecurity_Installer {
 		unblock tinyint(1) NOT NULL DEFAULT '0',
 		PRIMARY KEY  (id),
 		KEY blocked_ip (blocked_ip)
-		)" . $charset_collate . ";";
+		) ENGINE=InnoDB " . $charset_collate . ";";
 		dbDelta($pb_tbl_sql);
 
 		$audit_log_tbl_sql = "CREATE TABLE " . $audit_log_tbl_name . " (
@@ -193,7 +196,7 @@ class AIOWPSecurity_Installer {
 			INDEX ip (ip),
 			INDEX level (level),
 			INDEX event_type (event_type)
-			)" . $charset_collate . ";";
+			) ENGINE=InnoDB " . $charset_collate . ";";
 		dbDelta($audit_log_tbl_sql);
 
 		$debug_log_tbl_sql = "CREATE TABLE " . $debug_log_tbl_name . " (
@@ -206,7 +209,7 @@ class AIOWPSecurity_Installer {
 			message text NOT NULL,
 			type varchar(25) NOT NULL DEFAULT '',
 			PRIMARY KEY  (id)
-			)" . $charset_collate . ";";
+			) ENGINE=InnoDB " . $charset_collate . ";";
 		dbDelta($debug_log_tbl_sql);
 
 		$liu_tbl_sql = "CREATE TABLE " . $logged_in_users_tbl_name . " (
@@ -223,7 +226,7 @@ class AIOWPSecurity_Installer {
 			INDEX expires (expires),
 			INDEX user_id (user_id),
 			INDEX site_id (site_id)
-			) " . $charset_collate . ";";
+			) ENGINE=InnoDB " . $charset_collate . ";";
 		dbDelta($liu_tbl_sql);
 
 		$message_store_log_tbl_sql = "CREATE TABLE " . $message_store_log_tbl_name . " (
@@ -232,7 +235,7 @@ class AIOWPSecurity_Installer {
 			message_value text NOT NULL,
 			created INTEGER UNSIGNED,
 			PRIMARY KEY  (id)
-			)" . $charset_collate . ";";
+			) ENGINE=InnoDB " . $charset_collate . ";";
 		dbDelta($message_store_log_tbl_sql);
 	}
 
@@ -366,6 +369,52 @@ class AIOWPSecurity_Installer {
 	 */
 	public static function delete_aiowps_temp_configs_option() {
 		delete_option('aiowps_temp_configs');
+	}
+
+	/**
+	 * Alters all of the AIOS tables to use InnoDB.
+	 *
+	 * @global wpdb $wpdb
+	 *
+	 * @return void
+	 */
+	public static function update_tables_to_innodb() {
+		global $wpdb;
+
+		if (function_exists('is_multisite') && is_multisite()) {
+			/*
+			 * FIX for multisite table creation case:
+			 * Although each table name is defined in a constant inside the wp-security-core.php,
+			 * we need to do this step for multisite case because we need to refresh the $wpdb->prefix value
+			 * otherwise it will contain the original blog id and not the current id we need.
+			 *
+			 */
+			$lockout_tbl_name = $wpdb->prefix.'aiowps_login_lockdown';
+			$aiowps_global_meta_tbl_name = $wpdb->prefix.'aiowps_global_meta';
+			$aiowps_event_tbl_name = $wpdb->prefix.'aiowps_events';
+			$perm_block_tbl_name = $wpdb->prefix.'aiowps_permanent_block';
+		} else {
+			$lockout_tbl_name = AIOWPSEC_TBL_LOGIN_LOCKOUT;
+			$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
+			$aiowps_event_tbl_name = AIOWPSEC_TBL_EVENTS;
+			$perm_block_tbl_name = AIOWPSEC_TBL_PERM_BLOCK;
+		}
+
+		$message_store_log_tbl_name = AIOWPSEC_TBL_MESSAGE_STORE;
+		$audit_log_tbl_name = AIOWPSEC_TBL_AUDIT_LOG;
+		$debug_log_tbl_name = AIOWPSEC_TBL_DEBUG_LOG;
+		$logged_in_users_tbl_name = AIOWPSEC_TBL_LOGGED_IN_USERS;
+
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery -- No alternative.
+		$wpdb->query('ALTER TABLE ' . $lockout_tbl_name . ' ENGINE=InnoDB');
+		$wpdb->query('ALTER TABLE ' . $aiowps_global_meta_tbl_name . ' ENGINE=InnoDB');
+		$wpdb->query('ALTER TABLE ' . $aiowps_event_tbl_name . ' ENGINE=InnoDB');
+		$wpdb->query('ALTER TABLE ' . $perm_block_tbl_name . ' ENGINE=InnoDB');
+		$wpdb->query('ALTER TABLE ' . $audit_log_tbl_name . ' ENGINE=InnoDB');
+		$wpdb->query('ALTER TABLE ' . $debug_log_tbl_name . ' ENGINE=InnoDB');
+		$wpdb->query('ALTER TABLE ' . $logged_in_users_tbl_name . ' ENGINE=InnoDB');
+		$wpdb->query('ALTER TABLE ' . $message_store_log_tbl_name . ' ENGINE=InnoDB');
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery
 	}
 
 	public static function create_db_backup_dir() {

@@ -8,7 +8,7 @@ if (!class_exists('AIO_WP_Security')) {
 
 	class AIO_WP_Security {
 
-		public $version = '5.4.2';
+		public $version = '5.4.3';
 
 		public $db_version = '2.1.4';
 
@@ -408,7 +408,6 @@ if (!class_exists('AIO_WP_Security')) {
 			if (get_option('aiowpsec_db_version') != AIO_WP_SECURITY_DB_VERSION) {
 				require_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-installer.php');
 				AIOWPSecurity_Installer::run_installer();
-				AIOWPSecurity_Installer::set_cron_tasks_upon_activation();
 				AIOWPSecurity_Utility_Htaccess::write_to_htaccess(false);
 
 				/**
@@ -442,9 +441,6 @@ if (!class_exists('AIO_WP_Security')) {
 		 */
 		public function plugins_loaded_handler() {
 			//Runs when plugins_loaded action gets fired
-			// Add filter for 'cron_schedules' must be run before $this->db_upgrade_handler()
-			// so, AIOWPSecurity_Cronjob_Handler __construct runs this filter so the object should be initialized here.
-			$this->cron_handler = new AIOWPSecurity_Cronjob_Handler();
 			// DB upgrade handler - run outside admin interface
 			$this->db_upgrade_handler();
 			$this->firewall_upgrade_handler();
@@ -472,6 +468,8 @@ if (!class_exists('AIO_WP_Security')) {
 		 */
 		public function wp_security_plugin_init() {
 			//Actions, filters, shortcodes goes here
+			// AIOWPSecurity_Cronjob_Handler __construct runs filter 'cron_schedules' so the object should be initialized here because it uses translations.
+			$this->cron_handler = new AIOWPSecurity_Cronjob_Handler();
 			$this->user_login_obj = new AIOWPSecurity_User_Login();//Do the user login operation tasks
 			$this->user_registration_obj = new AIOWPSecurity_User_Registration();//Do the user login operation tasks
 			$this->captcha_obj = new AIOWPSecurity_Captcha(); // Do the CAPTCHA tasks

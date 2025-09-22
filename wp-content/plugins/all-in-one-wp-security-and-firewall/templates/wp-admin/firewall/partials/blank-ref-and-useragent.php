@@ -1,16 +1,15 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
-<div class="postbox">
-<h3 class="hndle"><label for="title"><?php esc_html_e('Blank HTTP headers', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
-<div class="inside">
-	<div id="firewall-ban-post-blank-headers-badge">
-		<?php
-		// Display security info badge
-		$aiowps_feature_mgr->output_feature_details_badge("firewall-ban-post-blank-headers");
-		?>
-	</div>
 
 <table class="form-table">
-	<tr valign="top">
+		<tr valign="top">
+			<div id="firewall-ban-post-blank-headers-badge">
+				<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("firewall-ban-post-blank-headers");
+				?>
+			</div>
+		</tr>
+		<tr valign="top">
 		<th scope="row"><?php esc_html_e('Ban POST requests that have a blank user-agent and referer', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 		<td>
 			<div class="aiowps_switch_container">
@@ -25,5 +24,4 @@
 			</div>
 		</td>
 	</tr>
-</table>
-</div></div>
+	</table>

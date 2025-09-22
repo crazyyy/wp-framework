@@ -73,7 +73,7 @@ class wfWAFIPBlocksController
 		$countryBlockEntries = wfBlock::countryBlocks(true);
 		$countryBlocks['blocks'] = array();
 		foreach ($countryBlockEntries as $b) {
-			$reason = __('Access from your area has been temporarily limited for security reasons', 'wordfence');
+			$reason = wfI18n::__('Access from your area has been temporarily limited for security reasons', 'wordfence');
 			
 			$countryBlocks['blocks'][] = array(
 				'id' => $b->id,
@@ -99,7 +99,7 @@ class wfWAFIPBlocksController
 		foreach ($otherBlockEntries as $b) {
 			$reason = $b->reason;
 			if ($b->type == wfBlock::TYPE_IP_MANUAL || $b->type == wfBlock::TYPE_IP_AUTOMATIC_PERMANENT) {
-				$reason = __('Manual block by administrator', 'wordfence');
+				$reason = wfI18n::__('Manual block by administrator', 'wordfence');
 			}
 			
 			$otherBlocks['blocks'][] = array(

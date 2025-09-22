@@ -43,6 +43,11 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 				'render_callback' => array($this, 'render_6g_firewall'),
 				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
+			'5g-firewall' => array(
+				'title' => __('5G legacy rules', 'all-in-one-wp-security-and-firewall'),
+				'render_callback' => array($this, 'render_5g_firewall'),
+				'display_condition_callback' => array('AIOWPSecurity_Utility', 'render_5g_legacy_tab'),
+			),
 			'internet-bots' => array(
 				'title' => __('Internet bots', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_internet_bots'),
@@ -69,30 +74,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return void
 	 */
 	protected function render_php_rules() {
-		global $aio_wp_security;
-
-		$aio_wp_security->include_template('wp-admin/firewall/php-firewall-rules.php');
-	}
-
-	/**
-	 * Renders the Htaccess Firewall tab
-	 *
-	 * @return void
-	 */
-	protected function render_htaccess_rules() {
-		global $aio_wp_security;
-
-		$aio_wp_security->include_template('wp-admin/firewall/htaccess-firewall-rules.php');
-	}
-	
-	/**
-	 * Renders the 6G Blacklist Firewall Rules tab
-	 *
-	 * @return void
-	 */
-	protected function render_6g_firewall() {
-		global $aio_wp_security, $aiowps_feature_mgr;
-		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
+		global $aio_wp_security, $aiowps_firewall_config, $aiowps_feature_mgr;
 
 		$block_request_methods = array_map('strtolower', AIOS_Abstracted_Ids::get_firewall_block_request_methods());
 
@@ -136,9 +118,43 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 			$blocked_agents    = false;
 		}
 
-		$advanced_options_disabled = '1' != $aio_wp_security->configs->get_value('aiowps_enable_6g_firewall');
+		$advanced_options_disabled = '1' !== $aio_wp_security->configs->get_value('aiowps_enable_6g_firewall');
 		$settings = array_merge(array('methods' => $methods), compact('blocked_query', 'blocked_request', 'blocked_referrers', 'blocked_agents', 'block_request_methods', 'aiowps_firewall_config', 'advanced_options_disabled'));
-		$aio_wp_security->include_template('wp-admin/firewall/6g.php', false, $settings);
+
+		$aio_wp_security->include_template('wp-admin/firewall/php-firewall-rules.php', false, array('settings' => $settings));
+	}
+
+	/**
+	 * Renders the Htaccess Firewall tab
+	 *
+	 * @return void
+	 */
+	protected function render_htaccess_rules() {
+		global $aio_wp_security;
+
+		$aio_wp_security->include_template('wp-admin/firewall/htaccess-firewall-rules.php');
+	}
+	
+	/**
+	 * Renders the 6G Blacklist Firewall Rules tab
+	 *
+	 * @return void
+	 */
+	protected function render_6g_firewall() {
+		global $aio_wp_security;
+
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => '6g'));
+	}
+
+	/**
+	 * Renders the 5G Blacklist Firewall Rules tab
+	 *
+	 * @return void
+	 */
+	protected function render_5g_firewall() {
+		global $aio_wp_security;
+
+		$aio_wp_security->include_template('wp-admin/firewall/5g.php');
 	}
 
 	/**
@@ -149,7 +165,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 	protected function render_internet_bots() {
 		global $aio_wp_security;
 
-		$aio_wp_security->include_template('wp-admin/firewall/internet-bots.php');
+		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => 'internet-bots'));
 	}
 
 

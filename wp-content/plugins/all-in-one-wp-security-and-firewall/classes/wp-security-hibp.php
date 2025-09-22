@@ -53,7 +53,8 @@ class AIOS_HIBP {
 	 * @return void
 	 */
 	public static function user_profile_update_check(&$errors, $update, &$user) {
-		if ($errors->has_errors()) {
+		// Use get_error_code() instead of has_errors() for backward compatibility with WP 5.0.
+		if ($errors->get_error_code() || empty($user->user_pass)) {
 			return;
 		}
 
@@ -70,7 +71,8 @@ class AIOS_HIBP {
 	 * @return void
 	 */
 	public static function password_reset_check($errors) {
-		if ($errors->has_errors() || !isset($_POST['pass1']) || empty($_POST['pass1'])) {
+		// Use get_error_code() instead of has_errors() for backward compatibility with WP 5.0.
+		if ($errors->get_error_code() || !isset($_POST['pass1']) || empty($_POST['pass1'])) {
 			return;
 		}
 

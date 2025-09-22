@@ -84,11 +84,7 @@ class AIOWPSecurity_User_Security_Menu extends AIOWPSecurity_Admin_Menu {
 			$user_accounts = $this->get_all_admin_accounts();
 		}
 		
-		$aio_wp_security->include_template('wp-admin/user-security/wp-username.php', false, array('aiowps_feature_mgr' => $aiowps_feature_mgr, 'user_accounts' => $user_accounts, 'AIOWPSecurity_User_Security_Menu' => $this));
-		
-		$aio_wp_security->include_template('wp-admin/user-security/display-name.php', false, array('aiowps_feature_mgr' => $aiowps_feature_mgr));
-
-		$aio_wp_security->include_template('wp-admin/user-security/user-enumeration.php', false, array());
+		$aio_wp_security->include_template('wp-admin/user-security/user-accounts.php', false, array('aiowps_feature_mgr' => $aiowps_feature_mgr, 'user_accounts' => $user_accounts, 'AIOWPSecurity_User_Security_Menu' => $this));
 	}
 
 	

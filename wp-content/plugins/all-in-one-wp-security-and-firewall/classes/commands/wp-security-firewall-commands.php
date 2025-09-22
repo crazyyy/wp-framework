@@ -21,6 +21,7 @@ trait AIOWPSecurity_Firewall_Commands_Trait {
 		$options = array();
 
 		$enable_pingback = isset($data["aiowps_enable_pingback_firewall"]);
+		$info = array();
 
 		// Save settings
 		$aiowps_firewall_config->set_value('aiowps_enable_pingback_firewall', $enable_pingback);
@@ -29,6 +30,74 @@ trait AIOWPSecurity_Firewall_Commands_Trait {
 		$aiowps_firewall_config->set_value('aiowps_forbid_proxy_comments', isset($data['aiowps_forbid_proxy_comments']));
 		$aiowps_firewall_config->set_value('aiowps_deny_bad_query_strings', isset($data['aiowps_deny_bad_query_strings']));
 		$aiowps_firewall_config->set_value('aiowps_advanced_char_string_filter', isset($data['aiowps_advanced_char_string_filter']));
+
+		$block_request_methods = array_map('strtolower', AIOS_Abstracted_Ids::get_firewall_block_request_methods());
+		$current_request_methods_settings = $aiowps_firewall_config->get_value('aiowps_6g_block_request_methods');
+		$current_other_settings = array(
+			$aiowps_firewall_config->get_value('aiowps_6g_block_query'),
+			$aiowps_firewall_config->get_value('aiowps_6g_block_request'),
+			$aiowps_firewall_config->get_value('aiowps_6g_block_referrers'),
+			$aiowps_firewall_config->get_value('aiowps_6g_block_agents'),
+		);
+
+		$are_methods_set = !empty($current_request_methods_settings);
+		$are_others_set = array_reduce($current_other_settings, function($carry, $item) {
+			return $carry || $item;
+		});
+
+		if (($are_methods_set || $are_others_set) && '1' !== $aio_wp_security->configs->get_value('aiowps_enable_6g_firewall')) {
+			$options['aiowps_enable_6g_firewall'] = '1';
+		}
+
+		if (isset($data['aiowps_enable_6g_firewall'])) {
+			$aiowps_6g_block_request_methods = array_filter(AIOS_Abstracted_Ids::get_firewall_block_request_methods(), function($block_request_method) {
+				return ('PUT' != $block_request_method);
+			});
+
+			if (false === $are_methods_set && false === $are_others_set) {
+				$aiowps_firewall_config->set_value('aiowps_6g_block_request_methods', $aiowps_6g_block_request_methods);
+				$aiowps_firewall_config->set_value('aiowps_6g_block_query', true);
+				$aiowps_firewall_config->set_value('aiowps_6g_block_request', true);
+				$aiowps_firewall_config->set_value('aiowps_6g_block_referrers', true);
+				$aiowps_firewall_config->set_value('aiowps_6g_block_agents', true);
+			} else {
+				$methods = array();
+
+				foreach ($block_request_methods as $block_request_method) {
+					if (isset($data['aiowps_block_request_method_'.$block_request_method])) {
+						$methods[] = strtoupper($block_request_method);
+					}
+				}
+
+				$aiowps_firewall_config->set_value('aiowps_6g_block_request_methods', $methods);
+				$aiowps_firewall_config->set_value('aiowps_6g_block_query', isset($data['aiowps_block_query']));
+				$aiowps_firewall_config->set_value('aiowps_6g_block_request', isset($data['aiowps_block_request']));
+				$aiowps_firewall_config->set_value('aiowps_6g_block_referrers', isset($data['aiowps_block_refs']));
+				$aiowps_firewall_config->set_value('aiowps_6g_block_agents', isset($data['aiowps_block_agents']));
+			}
+
+			$options['aiowps_enable_6g_firewall'] = '1';
+
+			//shows the success notice
+		} else {
+			AIOWPSecurity_Configure_Settings::turn_off_all_6g_firewall_configs();
+			$options['aiowps_enable_6g_firewall'] = '';
+		}
+
+		$aiowps_firewall_config->set_value('aiowps_ban_post_blank_headers', isset($data['aiowps_ban_post_blank_headers']));
+
+		if (isset($data['aiowps_block_fake_googlebots'])) {
+			$validated_ip_list_array = AIOWPSecurity_Utility::get_googlebot_ip_ranges();
+
+			if (is_wp_error($validated_ip_list_array)) {
+				$info[] = __('The attempt to save the \'Block fake Googlebots\' settings failed, because it was not possible to validate the Googlebot IP addresses:', 'all-in-one-wp-security-and-firewall') . ' ' . $validated_ip_list_array->get_error_message();
+			} else {
+				$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', true);
+				$aiowps_firewall_config->set_value('aiowps_googlebot_ip_ranges', $validated_ip_list_array);
+			}
+		} else {
+			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', false);
+		}
 		$options['aiowps_disallow_unauthorized_rest_requests'] = isset($data["aiowps_disallow_unauthorized_rest_requests"]) ? '1' : '';
 		
 		$aios_whitelisted_rest_routes = array();
@@ -52,17 +121,34 @@ trait AIOWPSecurity_Firewall_Commands_Trait {
 		// Commit the config settings
 		$this->save_settings($options);
 
+		$block_request_methods = array_map('strtolower', AIOS_Abstracted_Ids::get_firewall_block_request_methods());
+		$methods = $aiowps_firewall_config->get_value('aiowps_6g_block_request_methods');
+		if (empty($methods)) {
+			$methods = array();
+		}
+
+		$blocked_query     = (bool) $aiowps_firewall_config->get_value('aiowps_6g_block_query');
+		$blocked_request   = (bool) $aiowps_firewall_config->get_value('aiowps_6g_block_request');
+		$blocked_referrers = (bool) $aiowps_firewall_config->get_value('aiowps_6g_block_referrers');
+		$blocked_agents    = (bool) $aiowps_firewall_config->get_value('aiowps_6g_block_agents');
+		$content = array('aios-6g-firewall-settings-container .aios-advanced-options-panel' => $aio_wp_security->include_template('wp-admin/firewall/partials/advanced-settings-6g.php', true, compact('methods', 'blocked_query', 'blocked_request', 'blocked_referrers', 'blocked_agents', 'block_request_methods')));
+
 		$features = array(
 			'firewall-pingback-rules',
 			'firewall-disable-rss-and-atom',
 			'firewall-forbid-proxy-comments',
 			'firewall-deny-bad-queries',
 			'firewall-advanced-character-string-filter',
+			'firewall-enable-6g',
+			'firewall-block-fake-googlebots',
+			'firewall-ban-post-blank-headers',
 			'disallow-unauthorised-requests',
 		);
 
 		$args = array(
 			'badges' => $features,
+			'content' => $content,
+			'info' => $info,
 			'extra_args' => array('xmlprc_warning' => $enable_pingback ? $aio_wp_security->include_template('wp-admin/firewall/partials/xmlrpc-warning-notice.php', true) : '')
 		);
 
@@ -144,6 +230,54 @@ trait AIOWPSecurity_Firewall_Commands_Trait {
 	}
 
 	/**
+	 * Save and update the 5G firewall settings, and conditionally update the .htaccess file if needed.
+	 *
+	 * This function handles the saving of the 5G firewall settings based on user input. It checks if
+	 * the 5G firewall setting has been modified and writes the applicable rules to the .htaccess file
+	 * if necessary. In case of failure to write to the .htaccess file, it returns an error message.
+	 *
+	 * @param array $data The data array containing the 5G firewall setting.
+	 *
+	 * @global object $aio_wp_security The global instance of the All-In-One WP Security & Firewall plugin.
+	 *
+	 * @return array An array containing the status ('success' or 'error') and a message indicating
+	 *               the result of the operation.
+	 */
+	public function perform_save_5g_settings($data) {
+		global $aio_wp_security;
+
+		$response = array(
+			'status' => 'success',
+			'message' => __('The settings were successfully updated.', 'all-in-one-wp-security-and-firewall')
+		);
+
+		$options = array();
+
+		// If the user has changed the 5G firewall checkbox settings, then there is a need to write htaccess rules again.
+		$is_5G_firewall_option_changed = ((isset($data['aiowps_enable_5g_firewall']) && '1' != $aio_wp_security->configs->get_value('aiowps_enable_5g_firewall')) || (!isset($data['aiowps_enable_5g_firewall']) && '1' == $aio_wp_security->configs->get_value('aiowps_enable_5g_firewall')));
+
+		// Save settings
+		$options['aiowps_enable_5g_firewall'] = isset($data['aiowps_enable_5g_firewall']) ? '1' : '';
+		$this->save_settings($options);
+
+		$res = true;
+
+		if ($is_5G_firewall_option_changed) {
+			$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess(); // let's write the applicable rules to the .htaccess file
+		}
+
+		if (!$res) {
+			$response['status'] = 'error';
+			$response['message'] = __('Could not write to the .htaccess file for the 5G firewall settings, please check the file permissions.', 'all-in-one-wp-security-and-firewall');
+			// revert settings
+			$options['aiowps_enable_5g_firewall'] = '';
+			$this->save_settings($options);
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Perform saving blacklist settings
 	 *
 	 * @param array $data - the request data contains blacklist settings
@@ -202,159 +336,6 @@ trait AIOWPSecurity_Firewall_Commands_Trait {
 
 		$args = array(
 			'badges' => array("blacklist-manager-ip-user-agent-blacklisting")
-		);
-
-		return $this->handle_response($success, $message, $args);
-	}
-
-	/**
-	 * Perform saving internet bot settings
-	 *
-	 * @param array $data - the request data contains the internet bot settings to be updated
-	 *
-	 * @return array - containing a status and message
-	 */
-	public function perform_internet_bot_settings($data) {
-		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
-
-		$success = true;
-		$message = '';
-
-		if (isset($data['aiowps_block_fake_googlebots'])) {
-			$validated_ip_list_array = AIOWPSecurity_Utility::get_googlebot_ip_ranges();
-
-			if (is_wp_error($validated_ip_list_array)) {
-				$message = __('The attempt to save the \'Block fake Googlebots\' settings failed, because it was not possible to validate the Googlebot IP addresses:', 'all-in-one-wp-security-and-firewall') . ' ' . $validated_ip_list_array->get_error_message();
-				$success = false;
-			} else {
-				$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', true);
-				$aiowps_firewall_config->set_value('aiowps_googlebot_ip_ranges', $validated_ip_list_array);
-			}
-		} else {
-			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', false);
-		}
-
-		$aiowps_firewall_config->set_value('aiowps_ban_post_blank_headers', isset($data['aiowps_ban_post_blank_headers']));
-
-		$features = array(
-			"firewall-block-fake-googlebots",
-			"firewall-ban-post-blank-headers",
-		);
-
-		$args = array(
-			'badges' => $features
-		);
-
-		return $this->handle_response($success, $message, $args);
-	}
-
-	/**
-	 * Perform saving xG firewall settings
-	 *
-	 * @param array $data - the request data contains firewall settings to be updated
-	 *
-	 * @return array - containing a status and message
-	 */
-	public function perform_xG_firewall_settings($data) {
-		global $aio_wp_security;
-		$aiowps_firewall_config = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::CONFIG);
-
-		$options = array();
-		$content = array();
-		$success = true;
-		$message = '';
-
-		$block_request_methods = array_map('strtolower', AIOS_Abstracted_Ids::get_firewall_block_request_methods());
-		$current_request_methods_settings = $aiowps_firewall_config->get_value('aiowps_6g_block_request_methods');
-		$current_other_settings = array(
-			$aiowps_firewall_config->get_value('aiowps_6g_block_query'),
-			$aiowps_firewall_config->get_value('aiowps_6g_block_request'),
-			$aiowps_firewall_config->get_value('aiowps_6g_block_referrers'),
-			$aiowps_firewall_config->get_value('aiowps_6g_block_agents'),
-		);
-
-		$are_methods_set = !empty($current_request_methods_settings);
-		$are_others_set = array_reduce($current_other_settings, function($carry, $item) {
-			return $carry || $item;
-		});
-
-		if (($are_methods_set || $are_others_set) && '1' != $aio_wp_security->configs->get_value('aiowps_enable_6g_firewall')) {
-			$options['aiowps_enable_6g_firewall'] = '1';
-		}
-
-		//Save 6G/5G
-
-		// If the user has changed the 5G firewall checkbox settings, then there is a need to write htaccess rules again.
-		$is_5G_firewall_option_changed = ((isset($data['aiowps_enable_5g_firewall']) && '1' != $aio_wp_security->configs->get_value('aiowps_enable_5g_firewall')) || (!isset($data['aiowps_enable_5g_firewall']) && '1' == $aio_wp_security->configs->get_value('aiowps_enable_5g_firewall')));
-
-		// Save settings
-		$options['aiowps_enable_5g_firewall'] = isset($data['aiowps_enable_5g_firewall']) ? '1' : '';
-
-		$res = true;
-
-		if (isset($data['aiowps_enable_6g_firewall'])) {
-			$aiowps_6g_block_request_methods = array_filter(AIOS_Abstracted_Ids::get_firewall_block_request_methods(), function($block_request_method) {
-				return ('PUT' != $block_request_method);
-			});
-
-			if (false === $are_methods_set && false === $are_others_set) {
-				$aiowps_firewall_config->set_value('aiowps_6g_block_request_methods', $aiowps_6g_block_request_methods);
-				$aiowps_firewall_config->set_value('aiowps_6g_block_query', true);
-				$aiowps_firewall_config->set_value('aiowps_6g_block_request', true);
-				$aiowps_firewall_config->set_value('aiowps_6g_block_referrers', true);
-				$aiowps_firewall_config->set_value('aiowps_6g_block_agents', true);
-			} else {
-				$methods = array();
-
-				foreach ($block_request_methods as $block_request_method) {
-					if (isset($data['aiowps_block_request_method_'.$block_request_method])) {
-						$methods[] = strtoupper($block_request_method);
-					}
-				}
-
-				$aiowps_firewall_config->set_value('aiowps_6g_block_request_methods', $methods);
-				$aiowps_firewall_config->set_value('aiowps_6g_block_query', isset($data['aiowps_block_query']));
-				$aiowps_firewall_config->set_value('aiowps_6g_block_request', isset($data['aiowps_block_request']));
-				$aiowps_firewall_config->set_value('aiowps_6g_block_referrers', isset($data['aiowps_block_refs']));
-				$aiowps_firewall_config->set_value('aiowps_6g_block_agents', isset($data['aiowps_block_agents']));
-			}
-
-			$options['aiowps_enable_6g_firewall'] = '1';
-
-			//shows the success notice
-		} else {
-			AIOWPSecurity_Configure_Settings::turn_off_all_6g_firewall_configs();
-			$options['aiowps_enable_6g_firewall'] = '';
-		}
-
-		// Commit the config settings
-		$this->save_settings($options);
-		
-		// The save settings call above updates the 5G option, write the htaccess only after that. Do not move it above the save settings call.
-		if ($is_5G_firewall_option_changed) {
-			$res = AIOWPSecurity_Utility_Htaccess::write_to_htaccess(); // let's write the applicable rules to the .htaccess file
-		}
-
-		if ($res) {
-			$block_request_methods = array_map('strtolower', AIOS_Abstracted_Ids::get_firewall_block_request_methods());
-			$methods = $aiowps_firewall_config->get_value('aiowps_6g_block_request_methods');
-			if (empty($methods)) {
-				$methods = array();
-			}
-
-			$blocked_query     = (bool) $aiowps_firewall_config->get_value('aiowps_6g_block_query');
-			$blocked_request   = (bool) $aiowps_firewall_config->get_value('aiowps_6g_block_request');
-			$blocked_referrers = (bool) $aiowps_firewall_config->get_value('aiowps_6g_block_referrers');
-			$blocked_agents    = (bool) $aiowps_firewall_config->get_value('aiowps_6g_block_agents');
-			$content['aios-6g-firewall-settings-container .aios-advanced-options-panel'] = $aio_wp_security->include_template('wp-admin/firewall/partials/advanced-settings-6g.php', true, compact('methods', 'blocked_query', 'blocked_request', 'blocked_referrers', 'blocked_agents', 'block_request_methods'));
-		} else {
-			$success = false;
-			$message = __('Could not write to the .htaccess file, please check the file permissions.', 'all-in-one-wp-security-and-firewall');
-		}
-
-		$args = array(
-			'badges' => array('firewall-enable-6g'),
-			'content' => $content
 		);
 
 		return $this->handle_response($success, $message, $args);
