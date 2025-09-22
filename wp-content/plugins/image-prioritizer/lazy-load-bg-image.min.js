@@ -1,0 +1,1 @@
+const lazyBgImageObserver=new IntersectionObserver((e=>{for(const r of e)if(r.isIntersecting){const e=r.target;e.classList.remove("od-lazy-bg-image"),lazyBgImageObserver.unobserve(e)}}),{rootMargin:"100% 0% 100% 0%",threshold:0}),bgImageElements=document.querySelectorAll(".od-lazy-bg-image");for(const e of bgImageElements)lazyBgImageObserver.observe(e);

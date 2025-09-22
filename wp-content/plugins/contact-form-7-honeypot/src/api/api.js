@@ -151,3 +151,82 @@ export async function migrate() {
     
     return json.data;
 }
+
+/**
+ * Fetches the CF7 entries from the server.
+ *
+ * @since 3.1.0
+ * @returns {Promise<*|boolean>}
+ */
+export async function getCF7Entries( { page = 1, perPage = 10, form_id = 0, search = '', start_date = 0, end_date = 0 } = {} ) {
+
+    const response = await fetch(
+        `${CF7Apps.restURL}cf7apps/v1/get-cf7-entries?page=${ page }&per-page=${ perPage }&form-id=${ form_id }&search=${ search }&start-date=${ start_date }&end-date=${ end_date }`, {
+            headers: headers,
+            method: 'GET'
+        }
+    );
+
+    if (!response.ok) {
+        return false;
+    }
+
+    const json = await response.json();
+
+    return {
+        entries: json.data,
+        total: json.total,
+    }
+}
+
+/**
+ * Deletes the CF7 entries from the server.
+ *
+ * @since 3.1.0
+ * @param entryIds Array of entry IDs to delete.
+ *
+ * @returns {Promise<*|boolean>}
+ */
+export async function deleteCF7Entries( entryIds = [] ) {
+    if ( ! Array.isArray( entryIds ) || entryIds.length === 0 ) {
+        return false;
+    }
+
+    // serialize the entry IDs to a query string
+    const queryString = entryIds.map( id => `entry_ids[]=${ encodeURIComponent( id ) }` ).join( '&' );
+
+    const response = await fetch( `${CF7Apps.restURL}cf7apps/v1/delete-cf7-entries?${ queryString }`, {
+            headers: headers,
+            method: 'GET',
+    } );
+
+    if ( ! response.ok ) {
+        return false;
+    }
+
+    const json = await response.json();
+    return json.data;
+}
+
+/**
+ * Fetches all CF7 forms from the server.
+ *
+ * @since 3.1.0
+ * @returns {Promise<*|boolean>}
+ */
+export async function getAllCF7Forms() {
+    const response = await fetch(
+        `${CF7Apps.restURL}cf7apps/v1/get-all-cf7-forms`, {
+            headers: headers,
+            method: 'GET'
+        }
+    );
+
+    if (!response.ok) {
+        return false;
+    }
+
+    const json = await response.json();
+
+    return json.data;
+}

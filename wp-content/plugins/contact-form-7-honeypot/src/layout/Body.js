@@ -10,6 +10,7 @@ const Body = () => {
             <Route path='/:parent' element={<Apps />} />
             <Route path="/settings">
                 <Route path=':app' element={<AppSettings />} />
+                <Route path=':app/:section' element={ <AppSettings /> } />
             </Route>
         </Routes>
     );

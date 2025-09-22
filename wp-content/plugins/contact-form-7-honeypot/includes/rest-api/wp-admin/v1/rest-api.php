@@ -58,6 +58,36 @@ class CF7Apps_Rest_API_WP_Admin_V1 extends CF7Apps_Base_Rest_API {
             'callback'              => array( $this, 'migrate' ),
             'permission_callback'   => array( $this, 'authenticate' ),
         ) );
+
+		register_rest_route(
+			'cf7apps/v1',
+			'get-cf7-entries',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'get_cf7_entries' ),
+				'permission_callback' => array( $this, 'authenticate' ),
+			)
+		);
+
+		register_rest_route(
+			'cf7apps/v1/',
+			'delete-cf7-entries',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'delete_cf7_entries' ),
+				'permission_callback' => array( $this, 'authenticate' ),
+			)
+		);
+
+		register_rest_route(
+			'cf7apps/v1/',
+			'get-all-cf7-forms',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'get_all_cf7_forms' ),
+				'permission_callback' => array( $this, 'authenticate' ),
+			)
+		);
     }
 
     /**
@@ -238,6 +268,109 @@ class CF7Apps_Rest_API_WP_Admin_V1 extends CF7Apps_Base_Rest_API {
             );
         }
     }
+
+	/**
+	 * Get Contact Form 7 Entries | Callback
+	 *
+	 * @since 3.1.0
+	 * @param WP_REST_Request $request The REST request object.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function get_cf7_entries( $request ) {
+		$entries_module_enabled = get_option( 'cf7apps_settings' );
+		$entries                = array();
+		$total_entries          = 0;
+
+		if ( is_array( $entries_module_enabled ) && isset( $entries_module_enabled['cf7-entries']['is_enabled'] ) && $entries_module_enabled['cf7-entries']['is_enabled'] ) {
+			$page       = $request->get_param( 'page' );
+			$per_page   = $request->get_param( 'per-page' );
+			$search     = $request->get_param( 'search' );
+			$form_id    = $request->get_param( 'form-id' );
+			$start_date = $request->get_param( 'start-date' );
+			$end_date   = $request->get_param( 'end-date' );
+
+			if ( ! is_numeric( $page ) || $page < 1 ) {
+				$page = 1;
+			}
+
+			if ( ! is_numeric( $per_page ) || $per_page < 1 ) {
+				$per_page = 10; // Default to 10 entries per page
+			}
+
+			if ( ! empty( $start_date ) ) {
+				// currently the date picker returns date -1 we need to add one day
+				$start_date  = date( 'Y-m-d H:i:s', strtotime( $start_date . ' +1 day' ) );
+				$start_date  = strtotime( $start_date );
+			}
+
+			if ( ! empty( $end_date ) ) {
+				// currently the date picker returns date -1 we need to add one day
+				$end_date    = date( 'Y-m-d H:i:s', strtotime( $end_date . ' +1 day' ) );
+				$end_date  = strtotime( $end_date );
+			}
+
+			if ( ! empty( $start_date ) && ! empty( $end_date ) && $start_date === $end_date ) {
+				$end_date = strtotime( date( 'Y-m-d H:i:s', $end_date ) . ' +1 day' );
+			}
+
+			// offset
+			$offset = ( $page - 1 ) * $per_page;
+
+			$entries       = CF7Apps_Form_Entries::get_all_entries( $per_page, $offset, $form_id, $search, $start_date, $end_date, array( 'orderby' => 'id', 'order' => 'DESC' ) );
+			$total_entries = CF7Apps_Form_Entries::get_total_entries( $form_id, $search, $start_date, $end_date );
+
+			if ( empty( $entries ) ) {
+				wp_send_json_error( 'No entries found.', 404 );
+			}
+		}
+
+		return rest_ensure_response(
+			array(
+				'success' => true,
+				'data'    => $entries,
+				'total'   => $total_entries,
+			)
+		);
+	}
+
+	/**
+	 * Delete Contact Form 7 Entries | Callback
+	 *
+	 * @since 3.1.0
+	 * @param WP_REST_Request $request The REST request object.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function delete_cf7_entries( $request ) {
+		$entry_ids = $request->get_param( 'entry_ids' );
+		CF7Apps_Form_Entries::delete_entries( $entry_ids );
+
+		wp_send_json_success( 'Entries deleted successfully.' );
+	}
+
+	/**
+	 * Get All Contact Form 7 Forms | Callback
+	 *
+	 * @since 3.1.0
+	 *
+	 */
+	public function get_all_cf7_forms() {
+		$cf7_forms = get_posts( array(
+			'post_type'      => 'wpcf7_contact_form',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish'
+		) );
+
+		if ( empty( $cf7_forms ) ) {
+			wp_send_json_error( 'No forms found.', 404 );
+		}
+
+		$cf7_forms = wp_list_pluck( $cf7_forms, 'post_title', 'ID' );
+		$cf7_forms[0] = __( 'All Forms', 'cf7apps' );
+
+		wp_send_json_success( $cf7_forms );
+	}
 }
 
 new CF7Apps_Rest_API_WP_Admin_V1();

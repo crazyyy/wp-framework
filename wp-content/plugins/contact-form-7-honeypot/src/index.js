@@ -39,7 +39,7 @@ const CF7AppsView = () => {
         const response = await migrate();
         
         if(response) {
-            toast.success( __( 'Great! Migration completed successfully, Enjoy CF7Apps 🥳.', 'cf7apps' ) );
+            toast.success( __( 'Great! Migration completed successfully, Enjoy CF7 Apps 🥳.', 'cf7apps' ) );
             
             setMigrated( true );
         }
@@ -61,11 +61,11 @@ const CF7AppsView = () => {
                         <div className="cf7apps-migration-modal-container">
                             <div className="cf7apps-migration-modal">
                                 <div className="cf7apps-modal-content">
-                                    <img src={`${CF7Apps.assetsURL}/images/logo.png`} width="180px" alt="CF7Apps Logo" />
-                                    <h2>{ __( 'Attention: Introducing CF7Apps 🎉', 'cf7apps' ) }</h2>
-                                    <p>{ __( 'For enhanced security and additional features, we have developed CF7Apps. You can now move your Honeypot settings to the new Honeypot App inside CF7Apps.', 'cf7apps' ) }</p>
+                                    <img src={`${CF7Apps.assetsURL}/images/logo.png`} width="180px" alt="CF7 Apps Logo" />
+                                    <h2>{ __( 'Attention: Introducing CF7 Apps 🎉', 'cf7apps' ) }</h2>
+                                    <p>{ __( 'For enhanced security and additional features, we have developed CF7 Apps. You can now move your Honeypot settings to the new Honeypot App inside CF7 Apps.', 'cf7apps' ) }</p>
                                     <p>{ __( 'You can still use both, but we recommend switching now.', 'cf7apps' ) }</p>
-                                    <Button onClick={updateDatabase} isBusy={isMigrating} className="cf7apps-btn tertiary-primary">{ __( 'Yes, Migrate to CF7Apps', 'cf7apps' ) }</Button>
+                                    <Button onClick={updateDatabase} isBusy={isMigrating} className="cf7apps-btn tertiary-primary">{ __( 'Yes, Migrate to CF7 Apps', 'cf7apps' ) }</Button>
                                 </div>
                             </div>
                         </div>

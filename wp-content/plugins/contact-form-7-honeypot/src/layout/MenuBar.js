@@ -29,6 +29,14 @@ const MenuBar = (props) => {
                         <img src={`${CF7Apps.assetsURL}/images/spam-protection.png`} width="23px" alt={menu} /> { menu }
                     </>
                 );
+
+            case 'General':
+                return (
+                    <>
+                        <img style={ { marginTop: '-7px' } } src={`${ CF7Apps.assetsURL }/images/general.png`} width={'23px'} alt={ menu } /> { menu }
+                    </>
+                );
+                break;
             default:
                 return menu;
         }

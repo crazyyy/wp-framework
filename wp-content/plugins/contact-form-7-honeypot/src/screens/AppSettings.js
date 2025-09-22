@@ -27,6 +27,14 @@ const AppSettings = () => {
     const [notice, setNotice] = useState({ show: false, text: '' });
 
     useEffect(() => {
+
+        // need to set the tab value from the url hash
+        const hash = window.location.hash;
+        const explodedHash = hash.split('/');
+        if(explodedHash.length > 3) {
+            setTabValue(explodedHash[3]);
+        }
+
         async function fetchAppSettings() {
             if(app !== undefined) {
                 setIsLoading(true);
@@ -165,6 +173,13 @@ const AppSettings = () => {
         setIsSaving(false);
     }
 
+    const handleTabChange = ( e, newValue ) => {
+        setTabValue(newValue);
+        const explodedHash = window.location.hash.split('/');
+        explodedHash[3] = newValue;
+        window.location.hash = explodedHash.join('/');
+    };
+
     /**
      * Settings of the App.
      * 
@@ -179,11 +194,15 @@ const AppSettings = () => {
                 <div className="cf7apps-form">
                     <TabContext value={tabValue}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <TabList onChange={(e, newValue) => setTabValue(newValue)} className="cf7apps-settings-tablist">
+                            <TabList onChange={ handleTabChange } className="cf7apps-settings-tablist">
                                 {
                                     Object.keys(appSettings.setting_tabs).map((tabKey, tabIndex) => {
                                         return (
-                                            <Tab label={appSettings.setting_tabs[tabKey]} value={`${tabIndex + 1}`} className="cf7apps-settings-tab" />
+                                            <Tab
+                                                label={appSettings.setting_tabs[tabKey]}
+                                                value={`${tabIndex + 1}`}
+                                                className="cf7apps-settings-tab"
+                                            />
                                         )
                                     })
                                 }
@@ -290,8 +309,13 @@ const AppSettings = () => {
                                                 }
                                                 else if(fieldKey === 'template') {
                                                     const Template = CF7AppsTemplates[field];
+
+                                                    // passing app settings to template for enable and disable the entries app.
                                                     return(
-                                                        <Template />
+                                                        <Template
+                                                            appSettings={ appSettings }
+                                                            formData={ formData }
+                                                        />
                                                     )
                                                 }
                                                 else {

@@ -37,7 +37,7 @@ const CF7AppsHeader = () => {
                         <Flex>
                             <FlexItem>
                                 <Link to='/'>
-                                    <img src={`${CF7Apps.assetsURL}/images/logo.png`} width="250px" alt="CF7Apps Logo" />
+                                    <img src={`${CF7Apps.assetsURL}/images/logo.png`} width="250px" alt="CF7 Apps Logo" />
                                 </Link>
                             </FlexItem>
                             {

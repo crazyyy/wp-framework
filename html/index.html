@@ -1,31 +1,36 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en" class="no-js" dir="ltr">
 <head>
   <!-- saved from url=(0014)about:internet -->
   <meta charset="UTF-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title> </title>
+  <title>Starter HTML Template</title>
 
-  <link href="//www.google-analytics.com/" rel="dns-prefetch">
-  <link href="//fonts.googleapis.com" rel="dns-prefetch">
-  <link href="//cdnjs.cloudflare.com" rel="dns-prefetch">
+  <meta name="description" content="Modern starter HTML template with Bootstrap grid examples.">
+  <meta name="keywords" content="HTML, Bootstrap, Grid, Template, Starter">
+  <meta name="author" content="Your Name">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#ffffff">
 
-  <!-- icons -->
-  <link rel="icon" href="img/favicon/favicon.ico" sizes="any" rel="shortcut icon">
+  <!-- Performance optimizations: Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+  <!-- Favicon -->
+  <link rel="icon" href="img/favicon/favicon.ico" sizes="any">
   <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="img/favicon/icon.png">
 
-  <!-- css + javascript -->
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Styles -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Bootstrap (Grid Only) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap-grid.min.css" integrity="sha512-dOjUSaLkr6G2pwQ7ry9juX+iXw5602zg1kg8yH+guR3uSEidGyCnOEQnGlr7xwu/8WE+pVm1ZNqaIs5ETTIJQg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="css/main.css" media="all">
-
-  <!--[if lt IE 9]>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
 
   <meta name="theme-color" content="#fafafa">
 
@@ -33,8 +38,9 @@
 <body>
 <!-- wrapper -->
 <div class="wrapper">
+
   <header class="container" role="banner">
-      <div class="grid">
+      <div class="row">
 
         <div class="header__logo col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xlg-2">
           <img class="header__logo-image" src="img/logo.png" alt="" title="">
@@ -50,14 +56,14 @@
           </ul>
         </nav><!-- /.header__nav -->
 
-      </div><!-- /.grid -->
+      </div><!-- /.row -->
   </header><!-- /header .container-->
 
   <section class="container" role="main">
-    <div class="grid">
+    <div class="row">
 
       <article class="col-8">
-        <h1 class="page-title">Пример контента (рыба)</h1>
+        <h1 class="page-title">Content Example (Fish)</h1>
         <p>The purpose of this HTML is to help determine what default settings are with Bitters and to make sure that all possible HTML Elements are included in this HTML so as to not miss any possible Elements when designing a site.</p>
 
         <hr>
@@ -213,7 +219,7 @@
 
   <section class="container">
     <h2>Auto columns</h2>
-    <div class="grid">
+    <div class="row">
       <div class="col-auto">
         col-auto
       </div>
@@ -232,17 +238,17 @@
       <div class="col-xlg-auto">
         col-xlg-auto
       </div>
-    </div><!-- /.grid -->
+    </div><!-- /.row -->
   </section><!-- /section .container -->
 
   <section class="container">
     <h2>Nested grids</h2>
-    <div class="grid">
+    <div class="row">
       <div class="col-sm-6">
         <p>col-sm-6</p>
       </div>
       <div class="col-sm-6">
-        <div class="grid">
+        <div class="row">
           <div class="col-6">
             <p>col-6</p>
           </div>
@@ -255,21 +261,21 @@
           <div class="col-6">
             <p>col-6</p>
           </div>
-        </div><!-- /.grid -->
+        </div><!-- /.row -->
       </div>
-    </div><!-- /.grid -->
+    </div><!-- /.row -->
   </section><!-- /section .container -->
 
   <section class="container-full">
     <p>This element is inside the <em>full width</em> container but outside of the grid</p>
-    <div class="grid">
+    <div class="row">
       <div class="col-6">
         <p>An element inside the grid</p>
       </div>
       <div class="col-6">
         <p>Another element inside the grid</p>
       </div>
-    </div><!-- /.grid -->
+    </div><!-- /.row -->
   </section><!-- /section .container-full -->
 
 </div><!-- /wrapper -->
@@ -279,27 +285,28 @@
   <p>Without a container, the grid fills it's containing element (in this case the <code>body</code> element).</p>
 </div><!-- /.container -->
 
-<div class="grid">
+<div class="row">
   <div class="col-6">
     <p>An element inside the grid</p>
   </div>
   <div class="col-6">
     <p>Another element inside the grid</p>
   </div>
-</div><!-- /.grid -->
+</div><!-- /.row -->
 
 
 <footer class="container" role="contentinfo">
-  <div class="grid">
+  <div class="row">
     <p class="copyright col-12">
-      © 2023
+      © 2025
     </p><!-- /copyright -->
-  </div><!-- /.grid -->
+  </div><!-- /.row -->
 </footer><!-- /footer .container -->
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script type="text/javascript" src="js/lib/modernizr.js"></script>
-  <script type="text/javascript" src="js/scripts.js"></script>
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js" integrity="sha512-HvOjJrdwNpDbkGJIG2ZNqDlVqMo77qbs4Me4cah0HoDrfhrbA+8SBlZn1KrvAQw7cILLPFJvdwIgphzQmMm+Pw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="js/scripts.js"></script>
 
 </body>
 </html>

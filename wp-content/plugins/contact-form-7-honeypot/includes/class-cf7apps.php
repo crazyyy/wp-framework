@@ -35,6 +35,7 @@ class CF7Apps {
         // Check if Contact Form 7 is active
         if ( ! $this->is_contact_form_7_active() ) {
             add_action( 'admin_notices', array( $this, 'cf7_not_active_notice' ) );
+            deactivate_plugins( CF7APPS_PLUGIN );
             return; // Don't initialize if CF7 is not active
         }
 
@@ -69,7 +70,7 @@ class CF7Apps {
                 <?php 
                 printf(
                     __( '%s requires Contact Form 7 to be installed and activated. %s', 'cf7apps' ),
-                    '<strong>CF7Apps</strong>',
+                    '<strong>CF7 Apps</strong>',
                     '<a href="' . esc_url( admin_url( 'plugin-install.php?s=contact+form+7&tab=search&type=term' ) ) . '">' . __( 'Install Contact Form 7', 'cf7apps' ) . '</a>'
                 );
                 ?>
@@ -136,43 +137,14 @@ class CF7Apps {
      * @since 3.0.0
      */
     public function admin_menu() {
-        $page_id = add_menu_page( 
-            'CF7Apps', 
-            'CF7Apps', 
+        $page_id = add_submenu_page(
+            'wpcf7',
+            'CF7 Apps',
+            'CF7 Apps',
             'manage_options', 
             'cf7apps', 
             array( $this, 'cf7_apps' ), 
-            CF7APPS_PLUGIN_DIR_URL . '/assets/images/menu-icon.png' 
-        );
-
-        add_submenu_page(
-            'cf7apps',
-            __( 'All Apps', 'cf7apps' ),
-            __( 'All Apps', 'cf7apps' ),
-            'manage_options',
-            'cf7apps',
-            null
-        );
-
-        add_submenu_page(
-            'cf7apps',
-            __( 'Contact Forms', 'cf7apps' ),
-            __( 'Contact Forms', 'cf7apps' ),
-            'manage_options',
-            'wpcf7',
-            null
-        );
-        
-        add_submenu_page(
-            'cf7apps',
-            __( 'Add Contact Form', 'cf7apps' ),
-            __( 'Add Contact Form', 'cf7apps' ),
-            'manage_options',
-            'wpcf7-new',
-            function() {
-                wp_safe_redirect( admin_url( 'admin.php?page=wpcf7-new' ) );
-                exit;
-            }
+            3
         );
 
         add_action( "admin_print_styles-{$page_id}", array( $this, 'admin_styles' ) );

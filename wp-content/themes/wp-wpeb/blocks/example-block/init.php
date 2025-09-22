@@ -23,9 +23,9 @@
         'wpeb',
         'example',
       ),
-      'render_template' => 'blocks/example-block/example-block.php',
-      'enqueue_style' => WPEB_TEMPLATE_URL . '/blocks/example-block/example-block.css',
-      'enqueue_script' => WPEB_TEMPLATE_URL . '/blocks/example-block/example-block.js',
+      'render_template' => 'blocks/example-block/block.php',
+      'enqueue_style' => WPEB_TEMPLATE_URL . '/blocks/example-block/block.css',
+      'enqueue_script' => WPEB_TEMPLATE_URL . '/blocks/example-block/block.js',
       'supports' => array(
         'anchor' => true,
         'align' => true,

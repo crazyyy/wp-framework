@@ -502,13 +502,13 @@ function honeypot4cf7_show_admin_notice() {
     if ( isset( $_GET['page'] ) && $_GET['page'] === 'honeypot4cf7' ) {
         ?>
         <div class="notice notice-success">
-            <h3><?php _e( 'Welcome to CF7Apps!', 'cf7apps' ); ?></h3>
+            <h3><?php _e( 'Welcome to CF7 Apps!', 'cf7apps' ); ?></h3>
             <?php
             printf(
                 '<p>%s <a href="%s">%s</a></p>',
-                __( 'We\'ve moved your Honeypot settings to the Honeypot App in CF7Apps. You can still use both, but we recommend using the', 'cf7apps' ),
+                __( 'We\'ve moved your Honeypot settings to the Honeypot App in CF7 Apps. You can still use both, but we recommend using the', 'cf7apps' ),
                 esc_url( admin_url( 'admin.php?page=cf7apps#/settings/honeypot' ) ),
-                __( 'CF7Apps\' Honeypot App.', 'cf7apps' )
+                __( 'CF7 Apps\' Honeypot App.', 'cf7apps' )
             );
             ?>
         </div>

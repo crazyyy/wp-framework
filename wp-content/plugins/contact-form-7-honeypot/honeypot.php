@@ -1,18 +1,18 @@
 <?php
 /**
- * Plugin Name: Contact Form 7 Apps
+ * Plugin Name: CF7 Apps
  * Plugin URI: https://cf7apps.com/
  * Description: Contact Form 7 Apps is a collection of useful modules and extensions for Contact Form 7.
  * Author: CF7Apps
  * Author URI: https://wpexperts.io/
- * Version: 3.0.1
+ * Version: 3.1.0
  * Text Domain: contact-form-7-honeypot
  * Domain Path: /languages/
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CF7APPS_VERSION', '3.0.1' );
+define( 'CF7APPS_VERSION', '3.1.0' );
 define( 'CF7APPS_PLUGIN', __FILE__ );
 define( 'CF7APPS_PLUGIN_BASENAME', plugin_basename( CF7APPS_PLUGIN ) );
 define( 'CF7APPS_PLUGIN_NAME', trim( dirname( CF7APPS_PLUGIN_BASENAME ), '/' ) );

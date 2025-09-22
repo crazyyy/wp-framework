@@ -5,10 +5,20 @@
  * Includes SCSS, JS, image optimization, fonts, BrowserSync
  */
 
+// ===== Set isHtmlDev to TRUE if work with html, else - FALSE =====
+const isHtmlDev = true;
+
 // ===== Detect environment =====
 const isProd = process.env.NODE_ENV === 'production';
 const isTest = process.env.NODE_ENV === 'test';
 const isDev = !isProd && !isTest;
+
+
+// ToDo: Cosmiconfig searches for and loads configuration for your program https://github.com/cosmiconfig/cosmiconfig
+// const lazypipe = require( 'lazypipe' );
+// const replace = require( 'gulp-replace' );
+// const extReplace = require( 'gulp-ext-replace' );
+// const bytediff = require( 'gulp-bytediff' );
 
 // ===== Imports =====
 import gulp from 'gulp';
@@ -65,10 +75,19 @@ const browserSyncArgs = {
     key: config.ssl.key,
     cert: config.ssl.cert,
   },
-  server: {
-    baseDir: paths.base.dest,
-  },
 };
+
+if ( isHtmlDev ) {
+  browserSyncArgs.server = {
+    baseDir: paths.base.dest,
+  };
+  browserSyncArgs.logPrefix = 'HTML';
+} else {
+  browserSyncArgs.proxy = `https://${config.domain}`;
+  // browserSyncArgs.host = config.domain;
+  browserSyncArgs.logPrefix = 'WP';
+}
+
 
 // ===== Helper functions =====
 /**
@@ -220,77 +239,10 @@ export default gulp.series(build, watch);
 // // # Gulp workflow for WordPress theme development
 // // https://gist.github.com/tomazzaman/158c10361c19434b02ad
 
-// /* Set isHtmlDev to TRUE if work with html, else - FALSE */
-// const isHtmlDev = true;
-
-// /* Set environmentProd to TRUE if build for Production, or FALSE if this is development build*/
-// const isProd = process.env.NODE_ENV === 'production';
-// const isTest = process.env.NODE_ENV === 'test';
-// const isDev = !isProd && !isTest;
-
-// /* Import Base dependencies */
-// // ToDo: Cosmiconfig searches for and loads configuration for your program https://github.com/cosmiconfig/cosmiconfig
-// const config = require( 'config' );
-// const gulp = require( 'gulp' );
-// const lazypipe = require( 'lazypipe' );
-// const replace = require( 'gulp-replace' );
-// const extReplace = require( 'gulp-ext-replace' );
-// const isChanged = require( 'gulp-changed' );
-// const newer = require( 'gulp-newer' );
-// const plumber = require( 'gulp-plumber' );
-// const notify = require( 'gulp-notify' );
-
-// const bytediff = require( 'gulp-bytediff' );
-// const size = require( 'gulp-size' );
-
-// /* Image Processing Dependencies */
-// const imagemin = require( 'gulp-imagemin' ); // do not update gulp-imagemin // gulp-imagemin should be "7.1.0"
-// const svgmin = require( 'gulp-svgmin' );
-// const svgSprite = require( 'gulp-svg-sprite' );
-// const webp = require( 'gulp-webp' );
-
-// const concat = require( 'gulp-concat' );
-
-// /* JS Processing Dependencies */
-// const babel = require( 'gulp-babel' );
-// const uglify = require( 'gulp-uglify' );
-
-// const sourcemaps = require('gulp-sourcemaps');
-
-// /* Stylesheet Dependencies */
-// const autoprefixer = require( 'autoprefixer' );
-// const sass = require( 'gulp-sass' )( require( 'sass' ) );
-// const cleanCss = require('gulp-clean-css');
-// // const sass = require('gulp-sass');
-// const postcss = require( 'gulp-postcss' );
 
 
-// /* Import and config BrowserSync */
-// const browserSync = require( 'browser-sync' ).create();
 
-// // let browserSyncArgs;
-// const browserSyncArgs = {
-//   port: 9090,
-//   ui: false,
-//   logLevel: 'info',
-//   logConnections: true,
-//   logFileChanges: true,
-//   https: {
-//     key: config.ssl.key,
-//     cert: config.ssl.cert
-//   }
-// };
 
-// if ( isHtmlDev ) {
-//   browserSyncArgs.server = {
-//     baseDir: config.path.base.dest
-//   };
-//   browserSyncArgs.logPrefix = 'BS-HTML:';
-// } else {
-//   browserSyncArgs.proxy = `https://${config.domain}`;
-//   // browserSyncArgs.host = config.domain;
-//   browserSyncArgs.logPrefix = 'BS-WP:';
-// }
 
 // /* JS Dependencies */
 

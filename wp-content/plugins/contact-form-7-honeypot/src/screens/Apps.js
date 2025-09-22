@@ -34,7 +34,36 @@ const Apps = () => {
             </div>
             <div className="cf7apps-apps-section">
                 <div className="cf7apps-container">
-                    <h2>{ __( 'Spam Protection Apps', 'cf7apps' ) }</h2> 
+                    <h2>{ __( 'General', 'cf7apps' ) }</h2>
+
+                    <div className={ 'cf7apps-apps-container' }>
+                        {
+                            isLoading ?
+                                <>
+                                    <div className="cf7apps-app">
+                                        <CF7AppsSkeletonLoader width="100%" height={250} />
+                                    </div>
+                                    <div className="cf7apps-app">
+                                        <CF7AppsSkeletonLoader width="100%" height={250} />
+                                    </div>
+                                    <div className="cf7apps-app">
+                                        <CF7AppsSkeletonLoader width="100%" height={250} />
+                                    </div>
+                                </> :
+                                Object.keys( apps ).map( appIndex => {
+                                    return (
+                                        <>
+                                            {
+                                                'general' === String( apps[ appIndex ].parent_menu ).toLowerCase().replace( ' ', '-' )
+                                                && <CF7AppsApp settings={ apps[ appIndex ] } />
+                                            }
+                                        </>
+                                    )
+                                } )
+                        }
+                    </div>
+
+                    <h2>{ __( 'Spam Protection Apps', 'cf7apps' ) }</h2>
                     <div className="cf7apps-apps-container">
                         {
                             isLoading
@@ -56,7 +85,7 @@ const Apps = () => {
                                     apps.length - appIndex == 1 ? 
                                     <>
                                         <CF7AppsApp settings={apps[appIndex]} /> 
-                                        <a href="https://cf7apps.com/?utm_source=plugin&utm_medium=apps&utm_campaign=more_apps_coming_soon" target="_blank" className="cf7apps-app cf7apps-app-coming-soon">
+                                        <a href="https://cf7apps.com/submit-idea/?utm_source=plugin&utm_medium=apps&utm_campaign=click_to_submit_your_idea" target="_blank" className="cf7apps-app cf7apps-app-coming-soon">
                                             <div style={{ padding: 0 }}>
                                                 <img 
                                                     src={`${CF7Apps.assetsURL}/images/more-apps-coming-soon.png`} 
@@ -66,11 +95,22 @@ const Apps = () => {
                                                     style={{ verticalAlign: 'middle', marginTop: '10px' }} 
                                                 />
                                             </div>
-                                            <img src={`${CF7Apps.assetsURL}/images/coming-soon.png`} className="cf7apps-coming-soon" />
+                                            <h1 className="cf7apps-coming-soon">
+                                                { __( 'Click to submit', 'cf7apps' ) }
+                                                <br />
+                                                { __( 'Your idea!', 'cf7apps' ) }
+                                            </h1>
                                         </a>
                                     </>
-                                    : 
-                                    <CF7AppsApp settings={apps[appIndex]} /> 
+                                    :
+                                        (
+                                            <>
+                                                {
+                                                    'spam-protection' === String( apps[ appIndex ].parent_menu ).toLowerCase().replace( ' ', '-' )
+                                                    && <CF7AppsApp settings={ apps[ appIndex ] } />
+                                                }
+                                            </>
+                                        )
                                 )                                  
                             })
                         }
