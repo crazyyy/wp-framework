@@ -1,0 +1,13 @@
+@use "base/variables";
+
+header,
+nav ul li {
+  display: inline-block;
+}
+
+header {
+  background-color: variables.$gray-light;
+  .header--logo img {
+    max-width: 100%;
+  }
+}

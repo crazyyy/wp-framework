@@ -21,7 +21,7 @@ table {
 
     text-align: center;
 
-    border-bottom: 1px solid darken(variables.$base-border-color, 15%);
+    border-bottom: 1px solid variables.$base-border-color;
   }
   td {
     padding: variables.$small-spacing 0;

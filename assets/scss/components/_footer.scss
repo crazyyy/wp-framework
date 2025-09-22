@@ -1,0 +1,8 @@
+// // Footer
+// ////////////////////////////////////////////////
+@use "base/variables";
+footer {
+  height: variables.$footer;
+  margin: auto 0;
+  background-color: variables.$gray-light;
+}
