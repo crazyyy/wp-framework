@@ -6,7 +6,7 @@
  */
 
 // ===== Set isHtmlDev to TRUE if work with html, else - FALSE =====
-const isHtmlDev = false;
+const isHtmlDev = true;
 
 // ===== Detect environment =====
 const isProd = process.env.NODE_ENV === 'production';
