@@ -6,7 +6,7 @@
  */
 
 // ===== Set isHtmlDev to TRUE if work with html, else - FALSE =====
-const isHtmlDev = true;
+const isHtmlDev = false;
 
 // ===== Detect environment =====
 const isProd = process.env.NODE_ENV === 'production';
@@ -88,6 +88,23 @@ if ( isHtmlDev ) {
   browserSyncArgs.logPrefix = 'WP';
 }
 
+/* Pre-Config Path */
+if ( !isHtmlDev ) {
+  config.path.base.wp = `./wp-content/themes/${config.theme}/`;
+
+  // config.path.base.wp = './html/'; /* only for php files located in html */
+  changeBasePath( config );
+  config.path.base.dest = config.path.base.wp;
+}
+
+/* Start Build */
+if ( isProd ) {
+  console.log( '\x1b[32m', '-------------  PRODUCTION -------------' );
+  console.log( '\x1b[36m', '--------- Sourcemaps DISABLED ---------' );
+} else if ( isDev ) {
+  console.log( '\x1b[31m', '------------- DEVELOPMENT -------------' );
+  console.log( '\x1b[31m', '--------- Sourcemaps ENABLED ---------' );
+}
 
 // ===== Helper functions =====
 /**
@@ -103,6 +120,30 @@ function customErrorPlumber(errTitle) {
     }),
   });
 }
+
+/**
+ * Update config.path destinations to replace base.dest with base.wp
+ * @param {Object} config - Configuration object with path definitions
+ */
+function changeBasePath(config) {
+  const { base, images, fonts, styles, scripts } = config.path;
+
+  // List of keys in config.path that need replacement
+  const keysToUpdate = ["images", "fonts", "styles", "scripts"];
+
+  // Replace base.dest with base.wp for all listed keys
+  for (const key of keysToUpdate) {
+    if (config.path[key] && config.path[key].dest) {
+      config.path[key].dest = config.path[key].dest.replace(base.dest, base.wp);
+    }
+  }
+
+  // Handle destHtml separately
+  if (base.destHtml) {
+    config.path.base.destHtml = base.destHtml.replace(base.dest, base.wp);
+  }
+}
+
 
 // ===== Styles =====
 export function styles() {
@@ -240,31 +281,6 @@ export default gulp.series(build, watch);
 // // https://gist.github.com/tomazzaman/158c10361c19434b02ad
 
 
-
-
-
-
-// /* JS Dependencies */
-
-// /* Other Dependencies */
-
-// /* Pre-Config Path */
-// if ( !isHtmlDev ) {
-//   config.path.base.wp = `./wp-content/themes/${config.theme}/`;
-
-//   // config.path.base.wp = './html/'; /* only for php files located in html */
-//   ChangeBasePath( config );
-//   config.path.base.dest = config.path.base.wp;
-// }
-
-// /* Start Build */
-// if ( isProd ) {
-//   console.log( '\x1b[32m', '-------------  PRODUCTION -------------' );
-//   console.log( '\x1b[36m', '--------- Sourcemaps DISABLED ---------' );
-// } else if ( isDev ) {
-//   console.log( '\x1b[31m', '------------- DEVELOPMENT -------------' );
-//   console.log( '\x1b[31m', '--------- Sourcemaps ENABLED ---------' );
-// }
 
 // gulp.task('styles', () => {
 //   const srcPath = config.path.styles.srcFiles;
@@ -458,23 +474,7 @@ export default gulp.series(build, watch);
 // }
 // module.exports = customErrorPlumber;
 
-// function ChangeBasePath ( config ) {
-//   config.path.images.dest = config.path.images.dest.replace(
-//     config.path.base.dest, config.path.base.wp
-//   );
-//   config.path.fonts.dest = config.path.fonts.dest.replace(
-//     config.path.base.dest, config.path.base.wp
-//   );
-//   config.path.styles.dest = config.path.styles.dest.replace(
-//     config.path.base.dest, config.path.base.wp
-//   );
-//   config.path.scripts.dest = config.path.scripts.dest.replace(
-//     config.path.base.dest, config.path.base.wp
-//   );
-//   config.path.base.destHtml = config.path.base.destHtml.replace(
-//     config.path.base.dest, config.path.base.wp
-//   );
-// }
+
 
 
 /* Compile and automatically prefix stylesheets */
