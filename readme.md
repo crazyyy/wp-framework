@@ -176,6 +176,9 @@ Bulletproof `font-face` via Font Squirrel:
 
 This should provide a more detailed and user-friendly documentation with additional examples and comments.
 
+
+[Sass/SCSS Built-in Functions Tutorial](https://www.koderhq.com/tutorial/sass/native-functions/)
+
 ## Example wp-config.php
 
 ```php

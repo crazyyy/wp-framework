@@ -8,7 +8,13 @@
 @use "import/tables";
 @use "import/mixin";
 @use "import/helpers";
+
 @import "fonts/font_roboto";
+
+// Import all of Bootstrap’s CSS
+// @import "bootstrap/scss/bootstrap";
+// @import "../node_modules/bootstrap/scss/bootstrap";
+// @import "node_modules\bootstrap\scss\bootstrap-grid.scss";
 
 //@import 'grid/grid-bootstrap';
 //@use "import/grid";
@@ -144,4 +150,4 @@ footer {
 @include meta.load-css("media");
 
 @include meta.load-css("import/base64");
-@include meta.load-css("import/print");
+@include meta.load-css("print");

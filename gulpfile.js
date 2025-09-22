@@ -385,6 +385,10 @@ function ChangeBasePath ( config ) {
   );
 }
 
+
+// .pipe(plugins.notify("Hello Gulp!"))
+// .pipe(plugins.notify("Found file: <%= file.relative %>!"))
+
 // ToDo: check gulpfile from facebook https://github.com/facebook/relay
 // ToDo: check good framework https://github.com/wowthemesnet/Wow-Gulp-WP-Starter
 // ToDo: check good framework https://github.com/justcoded/web-starter-kit

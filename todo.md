@@ -35,17 +35,14 @@ https://github.com/squizlabs/PHP_CodeSniffer/
 https://laracasts.com/series/how-to-be-awesome-in-phpstorm
 https://laracasts.com/series/how-to-be-awesome-in-phpstorm/episodes/26
 
-
 ## Stylelint
 
 https://github.com/hudochenkov/stylelint-order
 https://github.com/stylelint-scss/stylelint-scss
 
-
 ## SCSS
 
 https://github.com/sds/scss-lint#installation
-
 
 ## check this composer plugins
 https://packagist.org/?query=wordpress
@@ -113,7 +110,6 @@ https://www.npmjs.com/package/css-declaration-sorter
 https://github.com/mcaskill/sass-mq
 https://github.com/sass-mq/sass-mq
 
-https://github.com/twbs/rfs
 https://github.com/topics/scss
 https://www.easeout.co/blog/2020-08-27-setup-media-queries-with-sass-mixins/
 https://www.toptal.com/css/sass-mixins-keep-your-stylesheets-dry
@@ -125,10 +121,7 @@ https://glennmccomb.com/articles/useful-sass-scss-media-query-mixins-for-bootstr
 https://www.barrage.net/blog/technology/top-8-sass-mixins
 https://eightshift.com/sass
 
-https://github.com/twbs/rfs
-https://codepen.io/MartijnCuppens/pen/vqaEBG?editors=0100
 
-https://www.koderhq.com/tutorial/sass/native-functions/
 
 #### Mixins
 scss lib https://docs.gerillass.com/docs/
@@ -150,5 +143,4 @@ https://github.com/W3cplus/SassMagic
 
 gulp-jshint https://github.com/generaxion/axio-starter/blob/master/package.json
 
-.pipe(plugins.notify("Hello Gulp!"))
-.pipe(plugins.notify("Found file: <%= file.relative %>!"))
+

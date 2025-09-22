@@ -1,6 +1,12 @@
-```scss
+# RFS 
 
-// scss/main.scss
+[✩ Automates responsive resizing ✩](https://github.com/twbs/rfs) 
+
+[Rescale components in an intuitive way with RFS](https://codepen.io/MartijnCuppens/pen/vqaEBG)
+
+[RFS Bootstrap’s](https://getbootstrap.com/docs/5.3/getting-started/rfs/)
+
+```scss // scss/main.scss
 
 @import "../node_modules/rfs/scss";
 
