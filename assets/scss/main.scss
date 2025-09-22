@@ -8,21 +8,22 @@
 @use "import/tables";
 @use "import/mixin";
 @use "import/helpers";
+@use "import/wordpress";
 
 @import "fonts/font_roboto";
 
 // Import all of Bootstrap’s CSS
 // @import "bootstrap/scss/bootstrap";
-// @import "../node_modules/bootstrap/scss/bootstrap";
-// @import "node_modules\bootstrap\scss\bootstrap-grid.scss";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+// @import "../../node_modules/bootstrap/scss/bootstrap-grid.scss";
 
 //@import 'grid/grid-bootstrap';
 //@use "import/grid";
 
 // ** Rescale components with RFS | https://github.com/twbs/rfs | https://codepen.io/MartijnCuppens/pen/vqaEBG ** //
-@use "../../node_modules/rfs/scss"; // @include scss.rfs(26px, font-size);
+@import "../../node_modules/rfs/scss"; // @include scss.rfs(26px, font-size);
 
-@use "import/wordpress";
+
 
 //@media (min-width: $lg) and (max-width: $lg-lst) {}
 
@@ -66,11 +67,11 @@ h4,
 h5,
 h6 {
   //font-size: variables.$base-font-size;
-  @include scss.rfs(variables.$base-font-size, font-size);
+  @include rfs(variables.$base-font-size, font-size);
   font-family: variables.$heading-font-family;
   line-height: variables.$heading-line-height;
   //margin: 0 0 variables.$small-spacing;
-  @include scss.rfs(0 0 variables.$small-spacing, margin);
+  @include rfs(0 0 variables.$small-spacing, margin);
 }
 
 p,
@@ -78,7 +79,7 @@ pre,
 img,
 picture {
   //margin: 0 0 variables.$small-spacing;
-  @include scss.rfs(0 0 variables.$small-spacing, margin);
+  @include rfs(0 0 variables.$small-spacing, margin);
   max-width: 100%;
 }
 
@@ -100,7 +101,7 @@ a {
 
 hr {
   //margin: 0 0 variables.$small-spacing;
-  @include scss.rfs(0 0 variables.$small-spacing, margin);
+  @include rfs(0 0 variables.$small-spacing, margin);
   border-bottom: variables.$base-border;
 }
 
