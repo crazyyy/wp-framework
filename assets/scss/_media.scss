@@ -1,20 +1,7 @@
-//// col-xl-# ( ≥1200px)
-//@include media-breakpoint-down(xl) {
-//
-//}
-//// col-lg-# ( ≥992px)
-//@include media-breakpoint-down(lg) {
-//
-//}
-//// col-md-# ( ≥768px)
-//@include media-breakpoint-down(md) {
-//
-//}
-//// col-sm-# ( ≥576px)
-//@include media-breakpoint-down(sm) {
-//
-//}
-//// col-# ( <575.5px)
-//@include media-breakpoint-down(xs) {
-//
-//}
+@media (min-width: 576px) { .col-xs-example {} }
+
+@media (min-width: 768px) { .col-sm-example {} }
+
+@media (min-width: 992px) { .col-md-example {} }
+
+@media (min-width: 1200px) { .col-lg-example {} }

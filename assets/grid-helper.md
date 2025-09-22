@@ -1,34 +1,40 @@
+# Grid Helper 
 
-// col-     | mobile      |   320-575
-280     653   Galaxy Fold
-360     740   Samsung Galaxy S8
-375     667   iPhone SE
-390     844   iPhone 12 Pro
-412     915   Pixel 7 / Samsung Galaxy S20
-414     896   iPhone XR / Samsung Galaxy A51/71
-430     932   iPhone 14 Pro Max
-540     720   Surface Duo
+(Grid system)[(https://getbootstrap.com/docs/5.2/layout/grid/)]
 
-// col-xs   | mobile wide |   576-767
+|                          | xs <576px | sm ≥576px | md ≥768px | lg ≥992px | xl ≥1200px | xxl ≥1400px |
+|--------------------------|-----------|-----------|-----------|-----------|------------|-------------|
+| **Container max-width**  | None      | 540px     | 720px     | 960px     | 1140px     | 1320px      |
+| **Class prefix**         | .col-     | .col-sm-  | .col-md-  | .col-lg-  | .col-xl-   | .col-xxl-   |
+
+|                    | Extra small (<576px) | Small (≥576px) | Medium (≥768px) | Large (≥992px) | Extra Large (≥1200px) | XXL (≥1400px) |
+|--------------------|----------------------|----------------|-----------------|----------------|------------------------|---------------|
+| **Class prefix**   | `.col-`              | `.col-sm-`     | `.col-md-`      | `.col-lg-`     | `.col-xl-`             | `.col-xxl-`   |
+| **Grid behaviour** | Horizontal at all times | Collapsed to start, horizontal above breakpoints | Collapsed to start, horizontal above breakpoints | Collapsed to start, horizontal above breakpoints | Collapsed to start, horizontal above breakpoints | Collapsed to start, horizontal above breakpoints |
+| **Container width**| None (auto)          | 540px          | 720px           | 960px          | 1140px                 | 1320px        |
+| **Suitable for**   | Portrait phones      | Landscape phones | Tablets        | Laptops        | Laptops and Desktops   | Laptops and Desktops |
+| **# of columns**   | 12                   | 12             | 12              | 12             | 12                     | 12            |
+| **Gutter width**   | 1.5rem (.75rem each side) | 1.5rem (.75rem each side) | 1.5rem (.75rem each side) | 1.5rem (.75rem each side) | 1.5rem (.75rem each side) | 1.5rem (.75rem each side) |
 
 
-// col-sm   | tablet      |   768-991
-768     1024   iPad Mini
-820     1180   iPad Air
-912     1368   Surface Pro 7
-853     1280   Asus Zenbook Fold
+```html 
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      One of three columns
+    </div>
+    <div class="col-sm">
+      One of three columns
+    </div>
+    <div class="col-sm">
+      One of three columns
+    </div>
+  </div>
+</div>
+```
 
-// col-md   | desktop     |   992-1199
-1024     600   Nest Hub
-1024    1366   iPad Pro
 
-// col-lg   | hd          |   1200-1599
-1280     832    MacBook Air / 13 / Nest Hub Max
-1440     900    MacBook Pro 15
-1512     982    MacBook Pro 14
-
-// col-xlg  | fullhd   |   1600+
-1920     980
-
+```scss
 @media (min-width: $lg) and (max-width: $lg-lst) {
 }
+```
