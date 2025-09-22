@@ -39,94 +39,115 @@
 <!-- wrapper -->
 <div class="wrapper">
 
-  <header class="container" role="banner">
-      <div class="row">
+  <header class="header container" role="banner">
+    <div class="header__row row">
+      
+      <!-- Logo -->
+      <div class="header__logo col-2">
+        <img class="header__logo-image" src="img/logo.png" alt="Company logo" title="Company logo">
+      </div>
 
-        <div class="header__logo col-2 col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xlg-2">
-          <img class="header__logo-image" src="img/logo.png" alt="" title="">
-        </div><!-- /.header__logo -->
+      <!-- Navigation -->
+      <nav class="header__nav col-10" role="navigation" aria-label="Main navigation">
+        <ul class="header__menu">
+          <li class="header__menu-item">
+            <a class="header__menu-link" href="#">Menu 1</a>
+          </li>
+          <li class="header__menu-item">
+            <a class="header__menu-link" href="#">Menu 2</a>
+          </li>
+          <li class="header__menu-item">
+            <a class="header__menu-link" href="#">Menu 3</a>
+          </li>
+          <li class="header__menu-item">
+            <a class="header__menu-link" href="#">Menu 4</a>
+          </li>
+          <li class="header__menu-item">
+            <a class="header__menu-link" href="#">Menu 5</a>
+          </li>
+        </ul>
+      </nav>
 
-        <nav class="header__nav col-10 col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xlg-10" role="navigation">
-          <ul class="header__menu">
-            <li class="header__menu-item"><a class="header__menu-link" href="#">menu</a></li>
-            <li class="header__menu-item"><a class="header__menu-link" href="#">menu</a></li>
-            <li class="header__menu-item"><a class="header__menu-link" href="#">menu</a></li>
-            <li class="header__menu-item"><a class="header__menu-link" href="#">menu</a></li>
-            <li class="header__menu-item"><a class="header__menu-link" href="#">menu</a></li>
-          </ul>
-        </nav><!-- /.header__nav -->
+    </div><!-- /.header__row -->
+  </header><!-- /.header -->
 
-      </div><!-- /.row -->
-  </header><!-- /header .container-->
 
-  <section class="container" role="main">
-    <div class="row">
+  <section class="content container" role="main">
+    <div class="content__row row">
 
-      <article class="col-8">
-        <h1 class="page-title">Content Example (Fish)</h1>
-        <p>The purpose of this HTML is to help determine what default settings are with Bitters and to make sure that all possible HTML Elements are included in this HTML so as to not miss any possible Elements when designing a site.</p>
+      <!-- Main Content -->
+      <article class="content__main col-lg-8">
+        <h1 class="content__title">Content Example (Fish)</h1>
+        <p class="content__text">
+          The purpose of this HTML is to help determine what default settings are with Bitters and to make sure that all possible HTML Elements are included in this HTML so as to not miss any possible Elements when designing a site.
+        </p>
 
         <hr>
 
-        <h1>h1. Heading</h1>
-        <h2>h2. Heading</h2>
-        <h3>h3. Heading</h3>
-        <h4>h4. Heading</h4>
-        <h5>h5. Heading</h5>
-        <h6>h6. Heading</h6>
+        <h2 class="content__subtitle">Headings</h2>
+        <h1 class="content__heading">h1. Heading</h1>
+        <h2 class="content__heading">h2. Heading</h2>
+        <h3 class="content__heading">h3. Heading</h3>
+        <h4 class="content__heading">h4. Heading</h4>
+        <h5 class="content__heading">h5. Heading</h5>
+        <h6 class="content__heading">h6. Heading</h6>
 
         <hr>
 
-        <h1>Paragraph</h1>
-
-        <p>Lorem ipsum dolor sit amet, <a href="#" title="test link">test link</a> adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.</p>
-
-        <p>Lorem ipsum dolor sit amet, <em>emphasis</em> consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.</p>
+        <h2 class="content__subtitle">Paragraphs</h2>
+        <p class="content__text">
+          Lorem ipsum dolor sit amet, <a class="content__link" href="#" title="test link">test link</a> adipiscing elit.
+        </p>
+        <p class="content__text">
+          Lorem ipsum dolor sit amet, <em>emphasis</em> consectetuer adipiscing elit.
+        </p>
 
         <hr>
 
-        <h1>List Types</h1>
+        <h2 class="content__subtitle">Lists</h2>
 
-        <h3>Definition List - dl > dt + dd</h3>
-        <dl>
-          <dt>Definition List Title</dt>
-          <dd>This is a definition list division.</dd>
+        <h3 class="content__list-title">Definition List</h3>
+        <dl class="content__list">
+          <dt class="content__list-term">Definition List Title</dt>
+          <dd class="content__list-desc">This is a definition list division.</dd>
         </dl>
 
-        <h3>Ordered List - ol</h3>
-        <ol>
-          <li>List Item 1</li>
-          <li>List Item 2</li>
-          <li>List Item 3</li>
+        <h3 class="content__list-title">Ordered List</h3>
+        <ol class="content__list content__list--ordered">
+          <li class="content__list-item">List Item 1</li>
+          <li class="content__list-item">List Item 2</li>
+          <li class="content__list-item">List Item 3</li>
         </ol>
 
-        <h3>Unordered List - ul</h3>
-        <ul>
-          <li>List Item 1</li>
-          <li>List Item 2</li>
-          <li>List Item 3</li>
+        <h3 class="content__list-title">Unordered List</h3>
+        <ul class="content__list content__list--unordered">
+          <li class="content__list-item">List Item 1</li>
+          <li class="content__list-item">List Item 2</li>
+          <li class="content__list-item">List Item 3</li>
         </ul>
 
         <hr>
 
-        <h1>Fieldsets and Form Elements</h1>
+        <h2 class="content__subtitle">Forms</h2>
+        <fieldset class="content__form-fieldset">
+          <p class="content__text">Lorem ipsum dolor sit amet...</p>
 
-        <fieldset>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus.</p>
+          <form class="content__form">
+            <h3 class="content__form-title">Form Example</h3>
 
-          <form>
-            <h2>Form Element</h2>
+            <div class="mb-3">
+              <label for="text_field" class="form-label">Text Field</label>
+              <input type="text" id="text_field" class="form-control">
+            </div>
 
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui.</p>
+            <div class="mb-3">
+              <label for="text_area" class="form-label">Text Area</label>
+              <textarea id="text_area" class="form-control"></textarea>
+            </div>
 
-            <p><label for="text_field">Text Field:</label>
-              <input type="text" id="text_field"></p>
-
-            <p><label for="text_area">Text Area:</label>
-              <textarea id="text_area"></textarea></p>
-
-            <p><label for="select_element">Select Element:</label>
-              <select id="select_element" name="select_element">
+            <div class="mb-3">
+              <label for="select_element" class="form-label">Select Element</label>
+              <select id="select_element" name="select_element" class="form-select">
                 <optgroup label="Option Group 1">
                   <option value="1">Option 1</option>
                   <option value="2">Option 2</option>
@@ -138,59 +159,59 @@
                   <option value="3">Option 3</option>
                 </optgroup>
               </select>
-            </p>
+            </div>
 
-            <p><label>Radio Buttons:</label>
-              <label>
-                <input type="radio" class="radio" name="radio_button" value="radio_1"> Radio 1
-              </label>
-              <label>
-                <input type="radio" class="radio" name="radio_button" value="radio_2"> Radio 2
-              </label>
-              <label>
-                <input type="radio" class="radio" name="radio_button" value="radio_3"> Radio 3
-              </label>
-            </p>
+            <fieldset class="mb-3">
+              <legend class="form-label">Radio Buttons</legend>
+              <div class="form-check">
+                <input type="radio" id="radio1" name="radio_button" value="radio_1" class="form-check-input">
+                <label for="radio1" class="form-check-label">Radio 1</label>
+              </div>
+              <div class="form-check">
+                <input type="radio" id="radio2" name="radio_button" value="radio_2" class="form-check-input">
+                <label for="radio2" class="form-check-label">Radio 2</label>
+              </div>
+            </fieldset>
 
-            <p>
-              <label>Checkboxes:</label>
-              <label>
-                <input type="checkbox" class="checkbox" name="checkboxes" value="check_1"> Checkbox 1
-              </label>
-              <label>
-                <input type="checkbox" class="checkbox" name="checkboxes" value="check_2"> Checkbox 2
-              </label>
-              <label>
-                <input type="checkbox" class="checkbox" name="checkboxes" value="check_3"> Checkbox 3
-              </label>
-            </p>
+            <fieldset class="mb-3">
+              <legend class="form-label">Checkboxes</legend>
+              <div class="form-check">
+                <input type="checkbox" id="check1" name="checkboxes" value="check_1" class="form-check-input">
+                <label for="check1" class="form-check-label">Checkbox 1</label>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" id="check2" name="checkboxes" value="check_2" class="form-check-input">
+                <label for="check2" class="form-check-label">Checkbox 2</label>
+              </div>
+            </fieldset>
 
-            <p>
-              <label for="password">Password:</label>
-              <input id="password" type="password" class="password" name="password">
-            </p>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input id="password" type="password" class="form-control" name="password">
+            </div>
 
-            <p><label for="file">File Input:</label>
-              <input id="file" type="file" class="file" name="file">
-            </p>
+            <div class="mb-3">
+              <label for="file" class="form-label">File Input</label>
+              <input id="file" type="file" class="form-control" name="file">
+            </div>
 
-            <p><input type="submit" value="Submit"></p>
+            <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </fieldset>
 
         <hr>
 
-        <h1>Tables</h1>
-
-        <table>
+        <h2 class="content__subtitle">Tables</h2>
+        <table class="content__table table table-bordered">
+          <thead>
+            <tr>
+              <th>Table Header 1</th>
+              <th>Table Header 2</th>
+              <th>Table Header 3</th>
+            </tr>
+          </thead>
           <tbody>
             <tr>
-              <th>Table Header 1</th><th>Table Header 2</th><th>Table Header 3</th>
-            </tr>
-            <tr>
-              <td>Division 1</td><td>Division 2</td><td>Division 3</td>
-            </tr>
-            <tr class="even">
               <td>Division 1</td><td>Division 2</td><td>Division 3</td>
             </tr>
             <tr>
@@ -198,110 +219,141 @@
             </tr>
           </tbody>
         </table>
-
-
       </article>
 
-      <aside class="sidebar col-4" role="complementary">
-        <div class="widget">
-          <h6>widget example</h6>
-          <ul>
-            <li class="cat-item-none"><a href="#">name</a></li>
-            <li class="cat-item-none"><a href="#">name</a></li>
-            <li class="cat-item-none"><a href="#">name</a></li>
+      <!-- Sidebar -->
+      <aside class="content__sidebar col-lg-4" role="complementary">
+        <div class="sidebar__widget">
+          <h6 class="sidebar__widget-title">Widget Example</h6>
+          <ul class="sidebar__list">
+            <li class="sidebar__list-item"><a href="#" class="sidebar__link">Name</a></li>
+            <li class="sidebar__list-item"><a href="#" class="sidebar__link">Name</a></li>
+            <li class="sidebar__list-item"><a href="#" class="sidebar__link">Name</a></li>
           </ul>
-        </div><!-- widget -->
-      </aside><!-- /sidebar -->
+        </div>
+      </aside>
+    </div>
+  </section>
 
-    </div><!-- /.grid -->
+  <!-- Example 1: Basic Grid -->
+  <section class="grid-demo container">
+    <h2 class="grid-demo__title">Basic Grid</h2>
+    <div class="grid-demo__row row">
+      <div class="grid-demo__col col-4">
+        <p class="grid-demo__text">col-4</p>
+      </div>
+      <div class="grid-demo__col col-4">
+        <p class="grid-demo__text">col-4</p>
+      </div>
+      <div class="grid-demo__col col-4">
+        <p class="grid-demo__text">col-4</p>
+      </div>
+    </div>
+  </section>
 
-  </section><!-- /section .container -->
-
-  <section class="container">
-    <h2>Auto columns</h2>
-    <div class="row">
-      <div class="col-auto">
-        col-auto
+  <!-- Example 2: Nested Grid -->
+  <section class="grid-demo container">
+    <h2 class="grid-demo__title">Nested Grid</h2>
+    <div class="grid-demo__row row">
+      <div class="grid-demo__col col-sm-6">
+        <p class="grid-demo__text">col-sm-6</p>
       </div>
-      <div class="col-auto">
-        col-auto
-      </div>
-      <div class="col-sm-auto">
-        col-sm-auto
-      </div>
-      <div class="col-md-auto">
-        col-md-auto
-      </div>
-      <div class="col-lg-auto">
-        col-lg-auto
-      </div>
-      <div class="col-xlg-auto">
-        col-xlg-auto
-      </div>
-    </div><!-- /.row -->
-  </section><!-- /section .container -->
-
-  <section class="container">
-    <h2>Nested grids</h2>
-    <div class="row">
-      <div class="col-sm-6">
-        <p>col-sm-6</p>
-      </div>
-      <div class="col-sm-6">
-        <div class="row">
-          <div class="col-6">
-            <p>col-6</p>
+      <div class="grid-demo__col col-sm-6">
+        <div class="grid-demo__row row">
+          <div class="grid-demo__col col-6">
+            <p class="grid-demo__text">Nested col-6</p>
           </div>
-          <div class="col-6">
-            <p>col-6</p>
+          <div class="grid-demo__col col-6">
+            <p class="grid-demo__text">Nested col-6</p>
           </div>
-          <div class="col-6">
-            <p>col-6</p>
-          </div>
-          <div class="col-6">
-            <p>col-6</p>
-          </div>
-        </div><!-- /.row -->
+        </div>
       </div>
-    </div><!-- /.row -->
-  </section><!-- /section .container -->
+    </div>
+  </section>
 
-  <section class="container-full">
-    <p>This element is inside the <em>full width</em> container but outside of the grid</p>
-    <div class="row">
-      <div class="col-6">
-        <p>An element inside the grid</p>
+  <!-- Example 3: Full-width container -->
+  <section class="grid-demo grid-demo--full container-fluid">
+    <h2 class="grid-demo__title">Full-width Container</h2>
+    <div class="grid-demo__row row">
+      <div class="grid-demo__col col-6">
+        <p class="grid-demo__text">col-6</p>
       </div>
-      <div class="col-6">
-        <p>Another element inside the grid</p>
+      <div class="grid-demo__col col-6">
+        <p class="grid-demo__text">col-6</p>
       </div>
-    </div><!-- /.row -->
-  </section><!-- /section .container-full -->
+    </div>
+  </section>
 
-</div><!-- /wrapper -->
+  <!-- Example 4: Responsive Columns -->
+  <section class="grid-demo container">
+    <h2 class="grid-demo__title">Responsive Columns</h2>
+    <div class="grid-demo__row row">
+      <div class="grid-demo__col col-12 col-md-8">
+        <p class="grid-demo__text">col-12 on mobile, col-md-8 on desktop</p>
+      </div>
+      <div class="grid-demo__col col-12 col-md-4">
+        <p class="grid-demo__text">col-12 on mobile, col-md-4 on desktop</p>
+      </div>
+    </div>
+  </section>
 
-<div class="container">
-  <h3>No container</h3>
-  <p>Without a container, the grid fills it's containing element (in this case the <code>body</code> element).</p>
-</div><!-- /.container -->
+  <!-- Example 5: No container -->
+  <section class="grid-demo">
+    <h2 class="grid-demo__title">Grid Without Container</h2>
+    <div class="grid-demo__row row">
+      <div class="grid-demo__col col-6">
+        <p class="grid-demo__text">col-6</p>
+      </div>
+      <div class="grid-demo__col col-6">
+        <p class="grid-demo__text">col-6</p>
+      </div>
+    </div>
+  </section>
 
-<div class="row">
-  <div class="col-6">
-    <p>An element inside the grid</p>
-  </div>
-  <div class="col-6">
-    <p>Another element inside the grid</p>
-  </div>
-</div><!-- /.row -->
+  <footer class="footer container-fluid bg-dark text-light py-4" role="contentinfo">
+    <div class="footer__row row align-items-center">
+      
+      <!-- Logo -->
+      <div class="footer__col footer__logo col-md-3 text-center text-md-start mb-3 mb-md-0">
+        <a href="/" class="footer__logo-link text-decoration-none text-light">
+          <img src="img/logo-footer.png" alt="Company Logo" class="footer__logo-image img-fluid" loading="lazy">
+        </a>
+      </div>
 
+      <!-- Navigation -->
+      <nav class="footer__col footer__nav col-md-6 mb-3 mb-md-0" aria-label="Footer Navigation">
+        <ul class="footer__menu nav justify-content-center">
+          <li class="footer__menu-item nav-item">
+            <a href="#" class="footer__menu-link nav-link px-2 text-light">Home</a>
+          </li>
+          <li class="footer__menu-item nav-item">
+            <a href="#" class="footer__menu-link nav-link px-2 text-light">About</a>
+          </li>
+          <li class="footer__menu-item nav-item">
+            <a href="#" class="footer__menu-link nav-link px-2 text-light">Services</a>
+          </li>
+          <li class="footer__menu-item nav-item">
+            <a href="#" class="footer__menu-link nav-link px-2 text-light">Contact</a>
+          </li>
+        </ul>
+      </nav>
 
-<footer class="container" role="contentinfo">
-  <div class="row">
-    <p class="copyright col-12">
-      © 2025
-    </p><!-- /copyright -->
-  </div><!-- /.row -->
-</footer><!-- /footer .container -->
+      <!-- Social Links -->
+      <div class="footer__col footer__social col-md-3 text-center text-md-end">
+        <a href="#" class="footer__social-link text-light me-3"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="footer__social-link text-light me-3"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="footer__social-link text-light"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer__row row mt-3">
+      <div class="footer__col col-12 text-center">
+        <p class="footer__copyright mb-0">&copy; 2025 Your Company. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
 
   <!-- JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
